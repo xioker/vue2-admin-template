@@ -59,7 +59,7 @@
         />
       </el-form-item>
 
-      <el-button :loading="loading" type="default"  style="width:100%;margin-bottom:30px;background-color:#5dd5c8;color:#fff;border:none" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="default" style="width:100%;margin-bottom:30px;background-color:#5dd5c8;color:#fff;border:none" @click.native.prevent="handleLogin">登录</el-button>
 
     </el-form>
   </div>

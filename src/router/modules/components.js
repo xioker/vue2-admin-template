@@ -47,7 +47,7 @@ const componentsRouter = {
       component: () => import('@/views/components-demo/dropzone'),
       name: 'DropzoneDemo',
       meta: { title: '会员费管理' }
-    },
+    }
     // {
     //   path: 'sticky',
     //   component: () => import('@/views/components-demo/sticky'),
