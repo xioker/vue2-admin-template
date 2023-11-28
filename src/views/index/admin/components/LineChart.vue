@@ -90,10 +90,10 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['订单数量', '订单金额']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '订单数量', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -102,15 +102,15 @@ export default {
               }
             }
           },
-          smooth: true,
+          smooth: false,
           type: 'line',
           data: expectedData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
-          smooth: true,
+          name: '订单金额',
+          smooth: false,
           type: 'line',
           itemStyle: {
             normal: {

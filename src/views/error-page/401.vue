@@ -2,7 +2,7 @@
  * @Author: shilin 1449163251@qq.com
  * @Date: 2023-11-27 10:30:07
  * @LastEditors: shilin 1449163251@qq.com
- * @LastEditTime: 2023-11-27 14:53:44
+ * @LastEditTime: 2023-11-28 15:42:48
  * @FilePath: \vue-element-admin\src\views\error-page\401.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -22,7 +22,7 @@
         <ul class="list-unstyled">
           <li>或者你可以去:</li>
           <li class="link-type">
-            <router-link to="/dashboard">
+            <router-link to="/index">
               回首页
             </router-link>
           </li>

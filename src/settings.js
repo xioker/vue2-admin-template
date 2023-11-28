@@ -1,28 +1,20 @@
 module.exports = {
-  title: 'Admin Pro',
+  // 网站标题
+  title: '星海系统',
+
+  // 网站logo
   logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png',
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the settings right-panel
-   */
-  showSettings: true,
 
-  /**
-   * @type {boolean} true | false
-   * @description Whether need tagsView
-   */
-  tagsView: true,
+  // 右侧全局设置是否展示
+  showSettings: false,
 
-  /**
-   * @type {boolean} true | false
-   * @description Whether fix the header
-   */
+  // 是否展示 tags标签
+  tagsView: false,
+
+  // 是否固定 header
   fixedHeader: true,
 
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the logo in sidebar
-   */
+  // 是否展示左侧标题 以及logo
   sidebarLogo: true,
 
   /**

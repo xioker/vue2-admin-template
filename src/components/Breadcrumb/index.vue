@@ -2,12 +2,12 @@
  * @Author: shilin 1449163251@qq.com
  * @Date: 2023-11-27 10:30:07
  * @LastEditors: shilin 1449163251@qq.com
- * @LastEditTime: 2023-11-27 14:13:21
+ * @LastEditTime: 2023-11-28 16:43:09
  * @FilePath: \vue-element-admin\src\components\Breadcrumb\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-breadcrumb class="app-breadcrumb" separator="/">
+  <el-breadcrumb class="app-breadcrumb" separator="-">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
         <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>

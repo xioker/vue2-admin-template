@@ -9,7 +9,7 @@ const componentsRouter = {
   name: 'ComponentDemo',
   meta: {
     title: '用户管理',
-    icon: 'component'
+    icon: 'el-icon-user'
   },
   children: [
     {
