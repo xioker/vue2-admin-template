@@ -19,7 +19,7 @@
     <Wapper>
       <template #title>待审核事件</template>
       <el-row type="flex" justify="space-between" :gutter="20" style="margin:0 0 20px 0;padding: 20px 10px 0 10px;background-color: #fff;box-sizing: border-box;">
-        <el-col v-for="item in records1" :key="item.title" :span="6" >
+        <el-col v-for="item in records2" :key="item.title" :span="6" >
           <CardItem style="background-color:#fbfbfb" :datas="item"/>
         </el-col>
       </el-row>
@@ -46,13 +46,20 @@
 
     <el-row :gutter="20">
       <el-col :span="8">
-        <Wapper><box-card /></Wapper>
+        <Wapper>
+          <template #title>佣金收入排行</template>
+          <box-card />
+        </Wapper>
       </el-col>
       <el-col :span="8">
-        <Wapper><box-card /></Wapper>
+        <Wapper>
+          <template #title>爆更版</template><box-card />
+        </Wapper>
       </el-col>
       <el-col :span="8">
-        <Wapper><box-card /></Wapper>
+        <Wapper>
+          <template #title>小说排行</template><box-card />
+        </Wapper>
       </el-col>
     </el-row>
   </div>
@@ -118,6 +125,12 @@ export default {
         { title: '总充值金额', img: require('@/assets/images/card3.png'), desc: '今日充值金额' },
         { title: '总提现金额', img: require('@/assets/images/card4.png'), desc: '今日提现金额' },
       ],
+      records2: [
+        { title: '提现', img: require('@/assets/images/card1.png'), desc: '' },
+        { title: '退货', img: require('@/assets/images/card2.png'), desc: '' },
+        { title: '留言', img: require('@/assets/images/card3.png'), desc: '' },
+        { title: '评价', img: require('@/assets/images/card4.png'), desc: '' },
+      ],
     }
   },
   methods: {
@@ -143,7 +156,7 @@ export default {
 
   .chart-wrapper {
     background: #fff;
-    padding: 16px 16px 0;
+    padding: 0 16px;
     margin-bottom: 32px;
   }
 }

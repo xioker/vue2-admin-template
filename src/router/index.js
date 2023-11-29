@@ -8,7 +8,6 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -50,11 +49,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
-  {
     path: '/404',
     component: () => import('@/views/error-page/404'),
     hidden: true
@@ -93,17 +87,16 @@ export const constantRoutes = [
   }
 ]
 
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
+
 export const asyncRoutes = [
+  componentsRouter,
+  // 设置管理
   {
-    path: '/permission',
+    path: '/setting',
     component: Layout,
     redirect: 'noRedirect',
     alwaysShow: true, // will always show the root menu
-    name: 'Permission',
+    name: 'Setting',
     meta: {
       title: '设置管理',
       icon: 'el-icon-setting',
@@ -111,137 +104,57 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: 'theme',
+        component: () => import('@/views/setting/theme/index'),
+        name: 'Theme',
         meta: {
           title: '主题设置',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
+        path: 'banner',
+        component: () => import('@/views/setting/banner/index'),
+        name: 'Banner',
         meta: {
           title: '首页banner'
           // if do not set roles, means: this page does not require permission
         }
       },
-      // {
-      //   path: 'role',
-      //   component: () => import('@/views/permission/role'),
-      //   name: 'RolePermission',
-      //   meta: {
-      //     title: 'Role Permission',
-      //     roles: ['admin']
-      //   }
-      // }
     ]
   },
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
-
-  /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
-  chartsRouter,
-
-  // {
-  //   path: '/excel',
-  //   component: Layout,
-  //   redirect: '/excel/export-excel',
-  //   name: 'Excel',
-  //   meta: {
-  //     title: 'Excel',
-  //     icon: 'excel'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'export-excel',
-  //       component: () => import('@/views/excel/export-excel'),
-  //       name: 'ExportExcel',
-  //       meta: { title: 'Export Excel' }
-  //     },
-  //     {
-  //       path: 'export-selected-excel',
-  //       component: () => import('@/views/excel/select-excel'),
-  //       name: 'SelectExcel',
-  //       meta: { title: 'Export Selected' }
-  //     },
-  //     {
-  //       path: 'export-merge-header',
-  //       component: () => import('@/views/excel/merge-header'),
-  //       name: 'MergeHeader',
-  //       meta: { title: 'Merge Header' }
-  //     },
-  //     {
-  //       path: 'upload-excel',
-  //       component: () => import('@/views/excel/upload-excel'),
-  //       name: 'UploadExcel',
-  //       meta: { title: 'Upload Excel' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/zip',
-  //   component: Layout,
-  //   redirect: '/zip/download',
-  //   alwaysShow: true,
-  //   name: 'Zip',
-  //   meta: { title: 'Zip', icon: 'zip' },
-  //   children: [
-  //     {
-  //       path: 'download',
-  //       component: () => import('@/views/zip/index'),
-  //       name: 'ExportZip',
-  //       meta: { title: 'Export Zip' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/pdf',
-  //   component: Layout,
-  //   redirect: '/pdf/index',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/pdf/index'),
-  //       name: 'PDF',
-  //       meta: { title: 'PDF', icon: 'pdf' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/pdf/download',
-  //   component: () => import('@/views/pdf/download'),
-  //   hidden: true
-  // },
-
-  // {
-  //   path: '/clipboard',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/clipboard/index'),
-  //       name: 'ClipboardDemo',
-  //       meta: { title: 'Clipboard', icon: 'clipboard' }
-  //     }
-  //   ]
-  // },
-
+  
+  // 小说管理
+  {
+    path: '/novel',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Novel',
+    meta: {
+      title: '小说管理',
+      icon: 'el-icon-reading'
+    },
+    children: [
+      {
+        path: 'novelList',
+        component: () => import('@/views/novel/novelList/index'),
+        name: 'NovelList',
+        meta: { title: '小说列表', noCache: true }
+      },
+      {
+        path: 'novelCategory',
+        component: () => import('@/views/novel/novelCategory/index'),
+        name: 'NovelCategory',
+        meta: { title: '小说分类', noCache: true }
+      },
+      {
+        path: 'novelAction',
+        component: () => import('@/views/novel/novelAction/index'),
+        name: 'NovelAction',
+        meta: { title: '小说活动标签', noCache: true }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

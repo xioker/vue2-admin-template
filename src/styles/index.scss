@@ -197,3 +197,13 @@ aside {
   justify-content: space-between;
   align-items: center;
 }
+// 去掉上下箭头
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+// 去掉edge默认眼睛
+input::-ms-reveal {
+  display: none;
+}

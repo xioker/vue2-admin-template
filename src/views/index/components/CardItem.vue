@@ -9,7 +9,7 @@
       </div>
       <img style="width:45px;height:100%" :src="datas.img" alt="">
     </div>
-    <div class="card-bottom flex-b-c">
+    <div class="card-bottom flex-b-c" v-if="datas.desc">
       <span>{{ datas.desc }}</span>
       <span>23</span>
     </div>
