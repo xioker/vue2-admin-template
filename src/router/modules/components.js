@@ -3,49 +3,49 @@
 import Layout from '@/layout'
 
 const componentsRouter = {
-  path: '/components',
+  path: '/user',
   component: Layout,
   redirect: 'noRedirect',
-  name: 'ComponentDemo',
+  name: 'User',
   meta: {
     title: '用户管理',
     icon: 'el-icon-user'
   },
   children: [
     {
-      path: 'tinymce',
-      component: () => import('@/views/components-demo/tinymce'),
-      name: 'TinymceDemo',
+      path: 'member',
+      component: () => import('@/views/user/member/index'),
+      name: 'Member',
       meta: { title: '会员管理' }
     },
     {
-      path: 'markdown',
-      component: () => import('@/views/components-demo/markdown'),
-      name: 'MarkdownDemo',
+      path: 'memberLevel',
+      component: () => import('@/views/user/memberLevel/index'),
+      name: 'MemberLevel',
       meta: { title: '会员等级' }
     },
     {
-      path: 'json-editor',
-      component: () => import('@/views/components-demo/json-editor'),
-      name: 'JsonEditorDemo',
+      path: 'userFreeback',
+      component: () => import('@/views/user/userFreeback/index'),
+      name: 'UserFreeback',
       meta: { title: '用户反馈' }
     },
     {
-      path: 'split-pane',
-      component: () => import('@/views/components-demo/split-pane'),
-      name: 'SplitpaneDemo',
+      path: 'messages',
+      component: () => import('@/views/user/messages/index'),
+      name: 'Messages',
       meta: { title: '站内信息' }
     },
     {
-      path: 'avatar-upload',
-      component: () => import('@/views/components-demo/avatar-upload'),
-      name: 'AvatarUploadDemo',
+      path: 'actionMessages',
+      component: () => import('@/views/user/actionMessages/index'),
+      name: 'ActionMessages',
       meta: { title: '活动消息' }
     },
     {
-      path: 'dropzone',
-      component: () => import('@/views/components-demo/dropzone'),
-      name: 'DropzoneDemo',
+      path: 'memberMoney',
+      component: () => import('@/views/user/memberMoney/index'),
+      name: 'MemberMoney',
       meta: { title: '会员费管理' }
     }
     // {

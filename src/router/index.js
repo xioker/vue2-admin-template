@@ -12,7 +12,6 @@ import componentsRouter from './modules/components'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
  * hidden: true                   if set true, item will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu
  *                                if not set alwaysShow, when item has more than one children route,
@@ -54,11 +53,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  },
-  {
     path: '/',
     component: Layout,
     redirect: '/index',
@@ -84,11 +78,7 @@ export const constantRoutes = [
         meta: { title: '个人信息', icon: 'user', noCache: true }
       }
     ]
-  }
-]
-
-
-export const asyncRoutes = [
+  },
   componentsRouter,
   // 设置管理
   {
@@ -157,6 +147,11 @@ export const asyncRoutes = [
   },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
+]
+
+
+export const asyncRoutes = [
+  
 ]
 
 const createRouter = () => new Router({

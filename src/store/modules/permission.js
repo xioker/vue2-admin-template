@@ -35,7 +35,8 @@ export function filterAsyncRoutes(routes, roles) {
 }
 
 const state = {
-  routes: [],
+  // 设置默认路由
+  routes: constantRoutes,
   addRoutes: []
 }
 
