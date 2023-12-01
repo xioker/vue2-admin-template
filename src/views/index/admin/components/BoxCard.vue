@@ -1,10 +1,23 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
     <div slot="header" class="box-card-header">
-      <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
+      <div class="flex-b-c box-card-head">
+        <div class="rank2 box-card-rank">
+          <img src="@/assets/images/rank2.png">
+          <img class="img-rank2" src="@/assets/images/img-no.jpg">
+        </div>
+        <div class="rank1 box-card-rank">
+          <img src="@/assets/images/rank1.png">
+          <img class="img-rank1" src="@/assets/images/img-no.jpg">
+        </div>
+        <div class="rank3 box-card-rank">
+          <img src="@/assets/images/rank3.png">
+          <img class="img-rank3" src="@/assets/images/img-no.jpg">
+        </div>
+      </div>
+      
     </div>
     <div style="position:relative;">
-      <pan-thumb :image="avatar" class="panThumb" />
       <mallki class-name="mallki-text" text="vue-element-admin" />
       <div style="padding-top:35px;" class="progress-item">
         <span>Vue</span>
@@ -28,11 +41,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
 export default {
-  components: { PanThumb, Mallki },
+  components: { Mallki },
 
   filters: {
     statusFilter(status) {
@@ -61,25 +73,48 @@ export default {
 }
 </script>
 
-<style lang="scss" >
-.box-card-component{
-  .el-card__header {
-    padding: 0px!important;
-  }
-}
-</style>
+
 <style lang="scss" scoped>
 .box-card-component {
   .box-card-header {
     position: relative;
-    height: 220px;
-    img {
+    .box-card-head{
       width: 100%;
-      height: 100%;
-      transition: all 0.2s linear;
-      &:hover {
-        transform: scale(1.1, 1.1);
-        filter: contrast(130%);
+      text-align: center;
+      margin: 10px auto;
+      .box-card-rank:nth-child(2){
+        margin-top: -50px;
+      }
+      .rank1{
+        background-image: linear-gradient(to bottom,#f5c633,#fff);
+      }
+      .rank2{
+        background-image: linear-gradient(to bottom,#b7bcd4,#fff);
+      }
+      .rank3{
+        background-image: linear-gradient(to bottom,#fc9738,#fff);
+      }
+      .box-card-rank{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img:nth-child(1) {
+          width: 40px;
+          height: auto;
+          position: absolute;
+          transition: all 0.2s linear;
+          &:hover {
+            transform: scale(1.1, 1.1);
+            filter: contrast(130%);
+          }
+        }
+        img:nth-child(2) {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
       }
     }
   }

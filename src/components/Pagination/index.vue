@@ -90,7 +90,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped scoped>
 .pagination-container {
   background: #fff;
   padding: 32px 16px;
