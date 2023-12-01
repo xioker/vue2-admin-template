@@ -73,7 +73,7 @@ export default {
         grid: {
           left: 10,
           right: 10,
-          bottom: 20,
+          bottom: 40,
           top: 30,
           containLabel: true
         },
@@ -90,7 +90,10 @@ export default {
           }
         },
         legend: {
-          data: ['订单数量', '订单金额']
+          data: ['订单数量', '订单金额'],
+          orient: 'horizontal', 
+          x: 'center',
+          y: 'bottom'
         },
         series: [{
           name: '订单数量', itemStyle: {

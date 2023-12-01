@@ -156,7 +156,7 @@ export default {
 
   .chart-wrapper {
     background: #fff;
-    padding: 0 16px;
+    padding:  0 16px 16px 16px;
     margin-bottom: 32px;
   }
 }
