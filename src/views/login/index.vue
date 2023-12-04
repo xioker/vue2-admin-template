@@ -45,19 +45,24 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-form-item style="width:60%;">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          v-model="loginForm.username"
-          placeholder="验证码"
-          name="username"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="14">
+          <el-form-item>
+            <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span>
+            <el-input
+              v-model="loginForm.verifyCode"
+              placeholder="验证码"
+              name="verifyCode"
+              type="text"
+              tabindex="1"
+              autocomplete="on"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="10" @click="apiVerifyCode"><img :src="codeImg" alt="" style="height:50px;width:100%;cursor: pointer;"></el-col>
+      </el-row>
 
       <el-button :loading="loading" type="default" style="width:100%;margin-bottom:30px;background-color:#5dd5c8;color:#fff;border:none" @click.native.prevent="handleLogin">登录</el-button>
 
@@ -67,45 +72,33 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import SocialSign from './components/SocialSignin'
+import { verifyCode } from '@/api/index'
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   name: 'Login',
-  components: { SocialSign },
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('用户名必填'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码必填'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '111111',
+        verifyCode: '',
+        uuid: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'blur', message: '用户名必填' }],
+        password: [{ required: true, trigger: 'blur', message: '验证码必填' }],
+        verifyCode: [{ required: true, trigger: 'blur', message: '验证码必填' }],
       },
+      codeImg : '',
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
-      showDialog: false,
-      redirect: undefined,
-      otherQuery: {}
     }
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    this.apiVerifyCode()
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -130,6 +123,15 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.password.focus()
+      })
+    },
+    // 获取验证码
+    apiVerifyCode(){
+      const uuid = uuidv4()
+      this.loginForm.uuid = uuid
+      verifyCode({uuid}).then((res) => {
+        const img = btoa(new Uint8Array(res).reduce((data, byte) => data + String.fromCharCode(byte), ""));
+        this.codeImg = `data:image/png;base64,${img}`
       })
     },
     handleLogin() {
@@ -200,7 +202,7 @@ $main_color:#5dd5c8;
 
   .login-form {
     background-color: #fff;
-    width: 410px;
+    width: 450px;
     padding: 35px;
     margin: 0 auto;
     box-shadow: 0 0 4px rgba(255,255,255,.8);

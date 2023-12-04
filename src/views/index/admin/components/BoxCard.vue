@@ -99,6 +99,11 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
+        img{
+          position: absolute;
+          inset: 0;
+          z-index: 9;
+        }
         img:nth-child(1) {
           width: 40px;
           height: auto;
@@ -110,6 +115,7 @@ export default {
           }
         }
         img:nth-child(2) {
+          z-index: 10;
           width: 80px;
           height: 80px;
           border-radius: 50%;

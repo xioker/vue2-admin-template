@@ -79,7 +79,48 @@ export const constantRoutes = [
       }
     ]
   },
+  // 菜单管理
+  {
+    path: '/auth',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true, // will always show the root menu
+    name: 'Auth',
+    meta: {
+      title: '权限管理',
+      icon: 'el-icon-menu',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'menu',
+        component: () => import('@/views/auth/menu/index'),
+        name: 'Menu',
+        meta: {
+          title: '菜单控制',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'role',
+        component: () => import('@/views/auth/role/index'),
+        name: 'Role',
+        meta: {
+          title: '角色管理'
+        }
+      },
+      {
+        path: 'userList',
+        component: () => import('@/views/auth/user/index'),
+        name: 'UserList',
+        meta: {
+          title: '用户列表'
+        }
+      },
+    ]
+  },
   componentsRouter,
+  
   // 设置管理
   {
     path: '/setting',

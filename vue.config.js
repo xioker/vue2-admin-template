@@ -29,6 +29,15 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    proxy: {
+      '/pc-api': {
+        target: 'http://8.130.37.133:8888/pc-api',
+        changeOrigin: true,
+        pathRewrite: {
+          '/pc-api': ''
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

@@ -1,24 +1,76 @@
 import request from '@/utils/request'
 
-export function login(data) {
+// 用户列表
+export function userList(data) {
   return request({
-    url: '/vue-element-admin/user/login',
+    url: '/sys-user/page_list',
+    method: 'post',
+    data
+  })
+}
+// 用户详情
+export function userDetail(params) {
+  return request({
+    url: '/sys-user/user_detail',
+    method: 'get',
+    params
+  })
+}
+// 用户保存
+export function userSave(data) {
+  return request({
+    url: '/sys-user/user_save',
+    method: 'post',
+    data
+  })
+}
+// 用户禁用 0停用 1启用
+export function userOper(data) {
+  return request({
+    url: '/sys-user/user_oper',
+    method: 'post',
+    data
+  })
+}
+// 修改密码
+export function updatePass(data) {
+  return request({
+    url: '/sys-user/update_pass',
     method: 'post',
     data
   })
 }
 
-export function getInfo(token) {
+// 角色管理列表
+export function roleList(data) {
   return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
+    url: '/sys-role/page_list',
+    method: 'post',
+    data
+  })
+}
+// 角色保存
+export function roleSave(data) {
+  return request({
+    url: '/sys-role/role_save',
+    method: 'post',
+    data
+  })
+}
+// 角色详情
+export function roleDetail(data) {
+  return request({
+    url: '/sys-role/role_detail',
+    method: 'post',
+    data
+  })
+}
+// 角色禁用 0禁用 1启用
+export function roleOper(data) {
+  return request({
+    url: '/sys-role/role_oper',
+    method: 'post',
+    data
   })
 }
 
-export function logout() {
-  return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
-  })
-}
