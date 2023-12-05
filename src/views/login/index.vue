@@ -16,8 +16,6 @@
           placeholder="用户名"
           name="username"
           type="text"
-          tabindex="1"
-          autocomplete="on"
         />
       </el-form-item>
 
@@ -33,8 +31,6 @@
             :type="passwordType"
             placeholder="密码"
             name="password"
-            tabindex="2"
-            autocomplete="on"
             @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
@@ -47,21 +43,19 @@
 
       <el-row :gutter="20">
         <el-col :span="14">
-          <el-form-item>
+          <el-form-item prop="verifyCode">
             <span class="svg-container">
-              <svg-icon icon-class="user" />
+              <i class="el-icon-picture"></i>
             </span>
             <el-input
               v-model="loginForm.verifyCode"
               placeholder="验证码"
               name="verifyCode"
               type="text"
-              tabindex="1"
-              autocomplete="on"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="10" @click="apiVerifyCode"><img :src="codeImg" alt="" style="height:50px;width:100%;cursor: pointer;"></el-col>
+        <el-col :span="10" @click.native.prevent="apiVerifyCode"><img :src="codeImg" alt="" style="height:45px;width:100%;cursor: pointer;"></el-col>
       </el-row>
 
       <el-button :loading="loading" type="default" style="width:100%;margin-bottom:30px;background-color:#5dd5c8;color:#fff;border:none" @click.native.prevent="handleLogin">登录</el-button>
@@ -81,14 +75,14 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111',
+        password: '123456',
         verifyCode: '',
         uuid: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', message: '用户名必填' }],
-        password: [{ required: true, trigger: 'blur', message: '验证码必填' }],
-        verifyCode: [{ required: true, trigger: 'blur', message: '验证码必填' }],
+        username: [{ required: true, trigger: 'change', message: '用户名必填' }],
+        password: [{ required: true, trigger: 'change', message: '密码必填' }],
+        verifyCode: [{ required: true, trigger: 'change', message: '验证码必填' }],
       },
       codeImg : '',
       passwordType: 'password',
@@ -97,7 +91,6 @@ export default {
     }
   },
   created() {
-    // window.addEventListener('storage', this.afterQRScan)
     this.apiVerifyCode()
   },
   mounted() {
@@ -106,9 +99,6 @@ export default {
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
-  },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
     checkCapslock(e) {
@@ -134,24 +124,29 @@ export default {
         this.codeImg = `data:image/png;base64,${img}`
       })
     },
+    // 登录按钮事件
     handleLogin() {
-      this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-      // this.$refs.loginForm.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true
-      //     this.$store.dispatch('user/login', this.loginForm)
-      //       .then(() => {
-      //         this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-      //         this.loading = false
-      //       })
-      //       .catch(() => {
-      //         this.loading = false
-      //       })
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm)
+            .then((res) => {
+              this.$message.success('登录成功')
+              this.$router.push({ path: '/'})
+              this.loading = false
+            })
+            .catch((err) => {
+              const { msg } = err
+              // 验证码过期 重新获取
+              if(msg && msg.indexOf('验证码已过期') !== -1) {
+                this.loginForm.verifyCode = ''
+                this.apiVerifyCode()
+              }
+              console.log(err)
+              this.loading = false
+            })
+        }
+      })
     },
   }
 }
@@ -161,7 +156,7 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
+$bg:#fff;
 
 /* reset element-ui css */
 .login-container {
@@ -175,14 +170,13 @@ $bg:#283443;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      height: 47px;
+      height: 45px;
       color: #000;
     }
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
     border-radius: 5px;
     color: #454545;
   }

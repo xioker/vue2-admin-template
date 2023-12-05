@@ -141,7 +141,6 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 20px;
   background-color: rgb(240, 242, 245);
   position: relative;
 

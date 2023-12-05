@@ -1,4 +1,5 @@
 import { login, logout, getInfo } from '@/api/index'
+import { userDetail } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -7,7 +8,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: ['Admin'],
+  userInfo: null
 }
 
 const mutations = {
@@ -25,18 +27,22 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
 const actions = {
-  // user login
+  // 登录 设置token以及用户信息
   login({ commit }, userInfo) {
     const { username, password, verifyCode, uuid } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password, verifyCode, uuid }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login({ username: username.trim(), password, verifyCode, uuid }).then(response => {
+        const { token, userName, userId } = response || {}
+        commit('SET_TOKEN', token)
+        commit('SET_USERINFO', { token, userName, userId })
+        setToken(token)
         resolve()
       })
       .catch(error => {
@@ -48,8 +54,8 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+      userDetail({userId:state.userInfo.userId}).then(response => {
+        const { userName, userId } = response
 
         if (!data) {
           reject('Verification failed, please Login again.')
@@ -76,20 +82,15 @@ const actions = {
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        removeToken()
-        resetRouter()
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      removeToken()
+      resetRouter()
 
-        // reset visited views and cached views
-        // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-        dispatch('tagsView/delAllViews', null, { root: true })
-
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      // reset visited views and cached views
+      // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+      dispatch('tagsView/delAllViews', null, { root: true })
+      resolve()
     })
   },
 

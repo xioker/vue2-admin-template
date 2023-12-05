@@ -7,14 +7,14 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 
+  timeout: 60 * 1000 
 })
 
 
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
-      config.headers['Authorization'] = getToken()
+      config.headers['Authorization'] = getToken() ?? ''
     }
     return config
   },
@@ -28,15 +28,14 @@ service.interceptors.response.use(
   response => {
     console.log(response)
     const { msg, status, data } = response.data
-    // if the custom code is not 20000, it is judged as an error.
-    if (status && status !== 20000) {
+    if (status && status != 200) {
       Message({
         message: msg || 'Error',
         type: 'error',
-        duration: 5 * 1000
+        duration: 3 * 1000
       })
 
-      if (code === 50008 || code === 50012 || code === 50014) {
+      if (['401'].includes(status)) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: '重新登录',
@@ -48,7 +47,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(message || 'Error'))
+      return Promise.reject(response.data || 'Error')
     } else {
       return data || response.data
     }
@@ -58,7 +57,7 @@ service.interceptors.response.use(
     Message({
       message: error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 3 * 1000
     })
     return Promise.reject(error)
   }

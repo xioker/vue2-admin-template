@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 登录
-export function login(data) {
+export function login(params) {
   return request({
     url: '/sys-user/login',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 // 验证码

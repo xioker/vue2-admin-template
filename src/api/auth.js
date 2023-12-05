@@ -115,34 +115,34 @@ export function roleAddMenu(data) {
   })
 }
 // 用户关联角色
-export function userAddRole(data) {
+export function userAddRole(params) {
   return request({
     url: '/sys-menu/user_add_role',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 // 获取指定角色菜单
-export function findRoleMenu(data) {
+export function findRoleMenu(params) {
   return request({
     url: '/sys-menu/find_role_menu',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 // 获取指定用户菜单
-export function roleOper(data) {
+export function findUserMenu(params) {
   return request({
-    url: '/sys-role/role_oper',
-    method: 'post',
-    data
+    url: '/sys-menu/find_user_menu',
+    method: 'get',
+    params
   })
 }
 // 获取指定用户角色
-export function findUserRole(data) {
+export function findUserRole(params) {
   return request({
     url: '/sys-menu/find_user_role',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
