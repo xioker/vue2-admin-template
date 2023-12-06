@@ -1,51 +1,48 @@
 <template>
-  <el-card class="box-card-component" style="margin-left:8px;">
-    <div slot="header" class="box-card-header">
+  <el-card class="box-card-component" shadow="never">
+    <div slot="header" class="box-card-header" >
       <div class="flex-b-c box-card-head">
-        <div class="rank2 box-card-rank">
-          <img src="@/assets/images/rank2.png">
-          <img class="img-rank2" src="@/assets/images/img-no.jpg">
+        <div class="box-card-rank">
+          <div>
+            <img src="@/assets/images/rank2.png">
+            <img class="img-rank2" src="@/assets/images/img-no.jpg">
+          </div>
+          <div class="rank2">
+            <span>天下第一大三大四烦烦烦</span>
+            <span>sasf</span>
+          </div>
         </div>
-        <div class="rank1 box-card-rank">
-          <img src="@/assets/images/rank1.png">
-          <img class="img-rank1" src="@/assets/images/img-no.jpg">
+        <div class="box-card-rank">
+          <div>
+            <img src="@/assets/images/rank1.png">
+            <img class="img-rank1" src="@/assets/images/img-no.jpg">
+          </div>
+          <div class="rank1">
+            <span>天下第二</span>
+            <span>sasf</span>
+          </div>
         </div>
-        <div class="rank3 box-card-rank">
-          <img src="@/assets/images/rank3.png">
-          <img class="img-rank3" src="@/assets/images/img-no.jpg">
+        <div class="box-card-rank">
+          <div>
+            <img src="@/assets/images/rank3.png">
+            <img class="img-rank3" src="@/assets/images/img-no.jpg">
+          </div>
+          <div class="rank3">
+            <span>天下第三</span>
+            <span>sasf</span>
+          </div>
         </div>
-      </div>
-      
-    </div>
-    <div style="position:relative;">
-      <mallki class-name="mallki-text" text="vue-element-admin" />
-      <div style="padding-top:35px;" class="progress-item">
-        <span>Vue</span>
-        <el-progress :percentage="70" />
-      </div>
-      <div class="progress-item">
-        <span>JavaScript</span>
-        <el-progress :percentage="18" />
-      </div>
-      <div class="progress-item">
-        <span>CSS</span>
-        <el-progress :percentage="12" />
-      </div>
-      <div class="progress-item">
-        <span>ESLint</span>
-        <el-progress :percentage="100" status="success" />
       </div>
     </div>
+    <MyTable :data="[]" :columns="columns"></MyTable>
   </el-card>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import Mallki from '@/components/TextHoverEffect/Mallki'
-
+import MyTable from '@/components/MyTable/index.vue'
 export default {
-  components: { Mallki },
-
+  components: { MyTable },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -55,12 +52,17 @@ export default {
       return statusMap[status]
     }
   },
+  props: {
+    columns: {
+      type: Array,
+      default: () => [
+        { prop: '', label: '封面' },{ prop: '', label: '书名' },{ prop: '', label: '浏览量' }
+      ]
+    }
+  },
   data() {
     return {
-      statisticsData: {
-        article_count: 1024,
-        pageviews_count: 1024
-      }
+      
     }
   },
   computed: {
@@ -76,45 +78,78 @@ export default {
 
 <style lang="scss" scoped>
 .box-card-component {
+  padding:30px 0;
+  border: none;
+  ::v-deep.el-card__header{
+    border-bottom: none;
+    padding: 20px 46px;
+  }
+  ::v-deep.el-card__body{
+    padding: 0 20px;
+  }
   .box-card-header {
-    position: relative;
     .box-card-head{
       width: 100%;
       text-align: center;
-      margin: 10px auto;
       .box-card-rank:nth-child(2){
         margin-top: -50px;
-      }
-      .rank1{
-        background-image: linear-gradient(to bottom,#f5c633,#fff);
-      }
-      .rank2{
-        background-image: linear-gradient(to bottom,#b7bcd4,#fff);
-      }
-      .rank3{
-        background-image: linear-gradient(to bottom,#fc9738,#fff);
       }
       .box-card-rank{
         position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
-        img{
-          position: absolute;
-          inset: 0;
-          z-index: 9;
+        .rank1{
+          font-size: 14px;
+          width: 100%;
+          background-image: linear-gradient(to bottom,#fff0c8,#fff);
         }
-        img:nth-child(1) {
+        .rank2{
+          font-size: 14px;
+          width: 100%;
+          background-image: linear-gradient(to bottom,#eceff5,#fff);
+        }
+        .rank3{
+          font-size: 14px;
+          width: 100%;
+          background-image: linear-gradient(to bottom,#ffeadb,#fff);
+        }
+        div{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .img-rank1{
+            border: 2px solid #f5c633;
+          }
+          .img-rank2{
+            border: 2px solid #c5cbe9;
+          }
+          .img-rank3{
+            border: 2px solid #ff9e22;
+          }
+        }
+        div:nth-child(2){
+          margin-top: -50px;
+          width: 120px;
+          min-height: 100px;
+          border-radius: 26px;
+          justify-content: flex-end;
+          padding: 0 6px;
+          span:nth-child(1){
+            margin-bottom: 2px;
+          }
+        }
+        div>img:nth-child(1) {
           width: 40px;
           height: auto;
-          position: absolute;
+          margin-bottom: 6px;
           transition: all 0.2s linear;
           &:hover {
             transform: scale(1.1, 1.1);
             filter: contrast(130%);
           }
         }
-        img:nth-child(2) {
+        div>img:nth-child(2) {
           z-index: 10;
           width: 80px;
           height: 80px;
@@ -122,37 +157,6 @@ export default {
           object-fit: cover;
         }
       }
-    }
-  }
-  .mallki-text {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  .panThumb {
-    z-index: 100;
-    height: 70px!important;
-    width: 70px!important;
-    position: absolute!important;
-    top: -45px;
-    left: 0px;
-    border: 5px solid #ffffff;
-    background-color: #fff;
-    margin: auto;
-    box-shadow: none!important;
-    ::v-deep .pan-info {
-      box-shadow: none!important;
-    }
-  }
-  .progress-item {
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  @media only screen and (max-width: 1510px){
-    .mallki-text{
-      display: none;
     }
   }
 }

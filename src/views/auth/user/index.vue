@@ -1,19 +1,10 @@
 <template>
   <div>
-    <!-- <el-table v-loading="tableLoading" :data="tableList">
-      <el-table-column align="center" label="账号" prop="userName"></el-table-column>
-      <el-table-column align="center" label="角色" prop="roleName"></el-table-column>
-      <el-table-column align="center" label="状态" prop="status">
-        <template #default="{row}">{{ row.status == 1 ? '已启用' : '已停用' }}</template>
-      </el-table-column>
-      <el-table-column align="center" label="创建人" prop="createId"></el-table-column>
-      <el-table-column align="center" label="创建时间" prop="createTime"></el-table-column>
-      <el-table-column align="center" label="更新人" prop="updateId"></el-table-column>
-      <el-table-column align="center" label="更新时间" prop="updateTime"></el-table-column>
-      <el-table-column align="center" label="操作" prop="action"></el-table-column>
-    </el-table> -->
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #status="{row}">{{ row.status == 1 ? '已启用' : '已停用' }}</template>
+      <template #action="{row}">
+        <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
+      </template>
     </MyTable>
   </div>
 </template>
@@ -33,12 +24,12 @@ export default {
       columns: [
         {label: '账号', prop: 'userName'},
         {label: '角色', prop: 'roleName'},
-        { slot: 'status', label: '状态', prop: 'status'},
+        {slot: 'status', label: '状态', prop: 'status'},
         {label: '创建人', prop: 'createId'},
         {label: '创建时间', prop: 'createTime'},
         {label: '更新人', prop: 'updateId'},
         {label: '更新时间', prop: 'updateTime'},
-        { slot: 'status', label: '操作', prop: 'action'},
+        {slot: 'action', label: '操作', prop: 'action'},
       ]
     }
   },

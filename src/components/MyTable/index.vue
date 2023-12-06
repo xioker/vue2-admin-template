@@ -5,8 +5,8 @@
         :label="co.label"
         :prop="co.prop"
         :width="co.width"
-        :fixed="co.fixed ?? false"
-        :align="co.align ?? 'center'"
+        :fixed="co.fixed || false"
+        :align="co.align || 'center'"
         :key="ind"
         v-if="co.prop === 'selection'"
       />
@@ -14,8 +14,8 @@
         :label="co.label"
         :prop="co.prop"
         :width="co.width"
-        :fixed="co.fixed ?? false"
-        :align="co.align ?? 'center'"
+        :fixed="co.fixed || false"
+        :align="co.align || 'center'"
         :key="co.label"
         v-else-if="co.prop === 'index'"
       />
@@ -23,23 +23,23 @@
         :label="co.label"
         :prop="co.prop"
         :width="co.width"
-        :fixed="co.fixed ?? false"
-        :align="co.align ?? 'center'"
-        :show-overflow-tooltip="co.showOverflowTooltip ?? true"
+        :fixed="co.fixed || false"
+        :align="co.align || 'center'"
+        :show-overflow-tooltip="co.showOverflowTooltip || true"
         :key="co.slot"
         v-else-if="co.slot"
       >
-        <template #default="{row,$index}">
-          <slot :name="co.prop" :row="row" :index="$index"></slot>
+        <template #default="scope">
+          <slot :name="co.prop" :row="scope.row" :index="scope.$index"></slot>
         </template>
       </el-table-column>
       <el-table-column
         :label="co.label"
         :prop="co.prop"
         :width="co.width"
-        :fixed="co.fixed ?? false"
-        :align="co.align ?? 'center'"
-        :show-overflow-tooltip="co.showOverflowTooltip ?? true"
+        :fixed="co.fixed || false"
+        :align="co.align || 'center'"
+        :show-overflow-tooltip="co.showOverflowTooltip || true"
         :key="co.prop"
         v-else
       />
@@ -60,9 +60,6 @@ export default {
       default: () => []
     },
   },
-  data() {
-    return {};
-  }
 }
 </script>
 <style lang="scss" scoped></style>

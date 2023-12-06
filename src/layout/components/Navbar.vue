@@ -11,9 +11,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
-            <el-dropdown-item>修改密码</el-dropdown-item>
-          </router-link>
+          <el-dropdown-item @click.native.prevent="pwdShow = true">修改密码</el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出</span>
           </el-dropdown-item>
@@ -22,6 +20,29 @@
     </div>
 
     <!-- 修改密码弹框 -->
+    <el-dialog append-to-body title="修改密码" :visible.sync="pwdShow" :close-on-click-modal="false" :close-on-press-escape="false" width="500px">
+      <el-form ref="pwdForm" :model="pwdForm" :rules="rules" label-position="right" label-width="80px">
+        <el-row>
+          <el-form-item label="原密码" prop="oldPassWord">
+            <el-input type="password" v-model="pwdForm.oldPassWord" placeholder="请输入原密码" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="新密码" prop="newPassWord">
+            <el-input type="password" v-model="pwdForm.newPassWord" placeholder="请输入新密码" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="确认密码" prop="surePassword">
+            <el-input type="password" v-model="pwdForm.surePassword" placeholder="请输入确认密码" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="onCancle">取 消</el-button>
+        <el-button type="primary" @click="onSure">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -30,6 +51,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
+import { updatePass } from '@/api/user'
 
 export default {
   components: {
@@ -44,7 +66,41 @@ export default {
       'device'
     ])
   },
+  data(){
+    let sPwassword = (rule, value, callback)=>{
+      if(value != this.pwdForm.newPassWord){
+        callback(new Error('两次输入密码不一致'));
+      }else{
+        callback();
+      }
+    }
+    return {
+      pwdShow: false,
+      pwdForm: {
+        oldPassWord: '',
+        newPassWord: '',
+        surePassword: ''
+      },
+      rules: {
+        oldPassWord: [{required: true,trigger: 'change', message: '原密码必填'}],
+        newPassWord: [{required: true,trigger: 'change', message: '新密码必填'}],
+        surePassword: [{required: true,trigger: 'change', message: '确认密码必填'},{validator:sPwassword}],
+      },
+    }
+  },
   methods: {
+    // 修改密码取消 确认操作
+    onCancle(){
+      this.pwdShow = false
+      this.$refs.pwdForm.resetFields()
+    },
+    onSure(){
+      this.$refs.pwdForm.validate((valid)=>{
+        if(valid){
+          this.pwdShow = false
+        }
+      })
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

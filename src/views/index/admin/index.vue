@@ -27,28 +27,27 @@
 
     <el-row :gutter="20">
       <el-col :span="12">
-        <div class="chart-wrapper">
-          <Wapper>
-            <template #title>订单趋势分析</template>
+        <Wapper>
+          <template #title>订单趋势分析</template>
+          <div class="chart-wrapper">
             <line-chart :chart-data="lineChartData" />
-          </Wapper>
-        </div>
+          </div>
+        </Wapper>
       </el-col>
       <el-col :span="12">
-        <div class="chart-wrapper">
-          <Wapper>
-            <template #title>会员趋势分析</template>
+        <Wapper>
+          <template #title>会员趋势分析</template>
+          <div class="chart-wrapper">
             <line-chart :chart-data="lineChartData" />
-          </Wapper>
-        </div>
+          </div>
+        </Wapper>
       </el-col>
     </el-row>
 
     <el-row :gutter="20">
       <el-col :span="8">
         <Wapper>
-          <template #title>佣金收入排行</template>
-          <box-card />
+          <template #title>佣金收入排行</template><box-card :columns="[{ prop: '', label: '头像' },{ prop: '', label: '昵称' },{ prop: '', label: '佣金收入' }]" />
         </Wapper>
       </el-col>
       <el-col :span="8">
@@ -154,13 +153,7 @@ export default {
   .chart-wrapper {
     background: #fff;
     padding:  0 16px 16px 16px;
-    margin-bottom: 32px;
-  }
-}
-
-@media (max-width:1024px) {
-  .chart-wrapper {
-    padding: 8px;
+    margin-bottom: 20px;
   }
 }
 </style>

@@ -65,20 +65,6 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: '个人信息', icon: 'user', noCache: true }
-      }
-    ]
-  },
   // 菜单管理
   {
     path: '/auth',
@@ -114,7 +100,7 @@ export const constantRoutes = [
         component: () => import('@/views/auth/user/index'),
         name: 'UserList',
         meta: {
-          title: '用户列表'
+          title: '管理员'
         }
       },
     ]
