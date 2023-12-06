@@ -1,9 +1,12 @@
 <template>
   <div>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
-      <template #status="{row}">{{ row.status == 1 ? '已启用' : '已停用' }}</template>
+      <template #status="{row}">
+        <el-tag :type="row.status == 1 ? 'success' : 'danger'">{{ row.status == 1 ? '已启用' : '已停用' }}</el-tag>
+      </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
+        <el-button size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
       </template>
     </MyTable>
   </div>
