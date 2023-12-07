@@ -4,11 +4,11 @@
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
-    <div class="right-menu">
+    <div class="right-menu ">
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
+        <div class="avatar-wrapper flex-c-c">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          {{ name || '' }}<i class="el-icon-caret-bottom" ></i>
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native.prevent="pwdShow = true">修改密码</el-dropdown-item>
@@ -20,7 +20,7 @@
     </div>
 
     <!-- 修改密码弹框 -->
-    <el-dialog append-to-body title="修改密码" :visible.sync="pwdShow" :close-on-click-modal="false" :close-on-press-escape="false" width="500px">
+    <el-dialog append-to-body title="修改密码" :visible.sync="pwdShow" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onCancle">
       <el-form ref="pwdForm" :model="pwdForm" :rules="rules" label-position="right" label-width="80px">
         <el-row>
           <el-form-item label="原密码" prop="oldPassWord">
@@ -63,7 +63,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
+      'device',
+      'name'
     ])
   },
   data(){
@@ -91,8 +92,8 @@ export default {
   methods: {
     // 修改密码取消 确认操作
     onCancle(){
-      this.pwdShow = false
       this.$refs.pwdForm.resetFields()
+      this.pwdShow = false
     },
     onSure(){
       this.$refs.pwdForm.validate((valid)=>{
@@ -170,25 +171,15 @@ export default {
     }
 
     .avatar-container {
-      margin-right: 30px;
-
+      margin-right: 10px;
+      font-size: 16px;
       .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+          margin-right: 10px;
         }
       }
     }

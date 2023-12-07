@@ -2,7 +2,7 @@
  * @Author: shilin 1449163251@qq.com
  * @Date: 2023-11-28 13:10:54
  * @LastEditors: shilin 1449163251@qq.com
- * @LastEditTime: 2023-11-28 15:33:32
+ * @LastEditTime: 2023-12-07 09:40:11
  * @FilePath: \vue-element-admin\src\views\index\components\Wapper.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -28,7 +28,6 @@ export default {
 <style lang="scss">
 .wapper{
   width: 100%;
-  min-width: max-content;
   max-width: 100%;
 }
   header{

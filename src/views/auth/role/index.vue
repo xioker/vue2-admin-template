@@ -1,12 +1,17 @@
 <template>
   <div>
+    <el-row style="margin-bottom: 10px;">
+      <el-button type="primary" icon="el-icon-plus">新增</el-button>
+    </el-row>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #status="{row}">
         <el-tag :type="row.status == 1 ? 'success' : 'danger'">{{ row.status == 1 ? '已启用' : '已停用' }}</el-tag>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
-        <el-button size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
+        <el-popconfirm @confirm="onStatus(row)" :title="`确定${row.status == 1 ? '禁用' : '启用'}吗`" style="margin-left:10px">
+          <el-button slot="reference" size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
+        </el-popconfirm>
       </template>
     </MyTable>
   </div>
@@ -48,6 +53,13 @@ export default {
     apiUserDetail(id) {
       userDetail(id).then(res => {
         console.log(res)
+      })
+    },
+    // 角色状态操作
+    onStatus({roleId,status}){
+      roleOper({roleId,type: status == '1' ? 0 : 1}).then(() => {
+        this.apiRoleList()
+        this.$message.success(`${status == '1' ? '禁用' : '启用'}成功`)
       })
     }
   },

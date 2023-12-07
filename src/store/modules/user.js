@@ -5,7 +5,7 @@ import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
-  name: '',
+  name: localStorage.getItem('name') ?? '',
   avatar: '',
   introduction: '',
   roles: ['Admin'],
@@ -21,6 +21,7 @@ const mutations = {
   },
   SET_NAME: (state, name) => {
     state.name = name
+    localStorage.setItem('name',name)
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -41,6 +42,7 @@ const actions = {
       login({ username: username.trim(), password, verifyCode, uuid }).then(response => {
         const { token, userName, userId } = response || {}
         commit('SET_TOKEN', token)
+        commit('SET_NAME', userName)
         commit('SET_USERINFO', { token, userName, userId })
         setToken(token)
         resolve()

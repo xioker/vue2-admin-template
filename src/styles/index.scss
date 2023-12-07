@@ -197,6 +197,11 @@ aside {
   justify-content: space-between;
   align-items: center;
 }
+.flex-c-c{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 // 去掉上下箭头
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
