@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import { menuList } from '@/api/auth'
+import { menuList,userDetail } from '@/api/auth'
 import MyTable from '@/components/MyTable/index.vue'
 export default {
   components: { MyTable },

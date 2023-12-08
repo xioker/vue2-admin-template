@@ -1,76 +1,63 @@
 import request from '@/utils/request'
 
-// 用户列表
-export function userList(data) {
+// 会员等级列表
+export function levelList(params) {
   return request({
-    url: '/sys-user/page_list',
-    method: 'post',
-    data
-  })
-}
-// 用户详情
-export function userDetail(params) {
-  return request({
-    url: '/sys-user/user_detail',
+    url: '/member-level/findMemberLevelList',
     method: 'get',
     params
   })
 }
-// 用户保存
-export function userSave(data) {
+// 等级详情
+export function levelDetail(params) {
   return request({
-    url: '/sys-user/user_save',
-    method: 'post',
-    data
-  })
-}
-// 用户禁用 0停用 1启用
-export function userOper(params) {
-  return request({
-    url: '/sys-user/user_oper',
+    url: '/member-level/level_detail',
     method: 'get',
     params
   })
 }
-// 修改密码
+// 等级保存
+export function levelSave(data) {
+  return request({
+    url: '/member-level/level_save',
+    method: 'post',
+    data
+  })
+}
+// 等级删除
+export function levelDel(params) {
+  return request({
+    url: '/member-level/level_del',
+    method: 'get',
+    params
+  })
+}
+
+// 反馈列表
 export function updatePass(data) {
   return request({
-    url: '/sys-user/update_pass',
+    url: '/customer-provide/page_list',
     method: 'post',
     data
   })
 }
 
-// 角色管理列表
+// 反馈删除
 export function roleList(data) {
   return request({
-    url: '/sys-role/page_list',
+    url: '/customer-provide/provide_del',
     method: 'post',
     data
   })
 }
-// 角色保存
+// 反馈回复
 export function roleSave(data) {
   return request({
-    url: '/sys-role/role_save',
+    url: '/customer-provide/replyProvide',
     method: 'post',
     data
   })
 }
-// 角色详情
-export function roleDetail(params) {
-  return request({
-    url: '/sys-role/role_detail',
-    method: 'get',
-    params
-  })
-}
-// 角色禁用 0禁用 1启用
-export function roleOper(params) {
-  return request({
-    url: '/sys-role/role_oper',
-    method: 'get',
-    params
-  })
-}
+// 会员费管理列表
+
 

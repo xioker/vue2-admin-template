@@ -10,7 +10,7 @@
       <template #action="{row}">
         <template v-if="row.roleName !== '超级管理员'">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiUserDetail(row)">编辑</el-button>
-          <el-popconfirm @confirm="onStatus(row)" :title="`确定${row.status == 1 ? '禁用' : '启用'}吗`" style="margin-left:10px">
+          <el-popconfirm @onConfirm="onStatus(row)" :title="`确定${row.status == 1 ? '禁用' : '启用'}吗`" style="margin-left:10px">
             <el-button slot="reference" size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
           </el-popconfirm>
         </template>
@@ -18,7 +18,7 @@
     </MyTable>
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
-      <el-form ref="user" :model="userForm" :rules="rules" label-position="right" label-width="50px">
+      <el-form ref="user" :model="userForm" label-position="right" label-width="50px">
         <el-row>
           <el-form-item label="账号" prop="userName" :rules="[{trigger:'blur',message: '账号不能为空',required: true}]">
             <el-input type="text" v-model="userForm.userName" placeholder="请输入账号" autocomplete="off"></el-input>
@@ -93,20 +93,20 @@ export default {
     // 新增
     onAdd(){
       this.visible = true
+      this.$refs.user.resetFields()
     },
     onDialogCancle(){
       this.visible = false
-      this.$refs.user.resetFields()
     },
     onDialogSure(){
       this.$refs.user.validate((valid) => {
         if(valid){
-          const { userName, password, status } = this.userForm
-          userSave({ userName, password, status }).then(()=>{
+          const { userName, password, status, userId } = this.userForm
+          userSave(this.userForm).then(()=>{
             this.apiUserList()
             this.visible = false
             this.$refs.user.resetFields()
-            this.$message.success('新增成功')
+            this.$message.success(`${userId ? '编辑' : '新增'}成功`)
           })
         }
       })

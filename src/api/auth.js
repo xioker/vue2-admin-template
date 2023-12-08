@@ -25,11 +25,11 @@ export function userSave(data) {
   })
 }
 // 用户禁用 0停用 1启用
-export function userOper(data) {
+export function userOper(params) {
   return request({
     url: '/sys-user/user_oper',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 // 修改密码
@@ -58,19 +58,19 @@ export function roleSave(data) {
   })
 }
 // 角色详情
-export function roleDetail(data) {
+export function roleDetail(params) {
   return request({
     url: '/sys-role/role_detail',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 // 角色禁用 0禁用 1启用
-export function roleOper(data) {
+export function roleOper(params) {
   return request({
     url: '/sys-role/role_oper',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 

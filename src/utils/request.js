@@ -2,6 +2,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import router from '@/router'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -25,7 +26,6 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   response => {
-    console.log(response)
     const { msg, status, data } = response.data
     if (status && status != 200) {
       Message({
@@ -35,14 +35,13 @@ service.interceptors.response.use(
       })
 
       if (['401'].includes(status)) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+        MessageBox.confirm('登录失效，请重新登录', '提示', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
-            location.reload()
+            router.push('/login')
           })
         })
       }

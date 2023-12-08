@@ -98,7 +98,12 @@ export default {
     onSure(){
       this.$refs.pwdForm.validate((valid)=>{
         if(valid){
-          this.pwdShow = false
+          const { oldPassWord, newPassWord } = this.pwdForm
+          updatePass({ oldPassWord, newPassWord }).then(()=>{
+            this.$message.success('修改成功')
+            this.$refs.pwdForm.resetFields()
+            this.pwdShow = false
+          })
         }
       })
     },
