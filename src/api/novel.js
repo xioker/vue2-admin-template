@@ -25,7 +25,7 @@ export function bookTypeSave(data) {
   })
 }
 // 小说分类删除
-export function bookTypeOper(params) {
+export function bookTypeDelete(params) {
   return request({
     url: '/book-type/bookType_delete',
     method: 'get',

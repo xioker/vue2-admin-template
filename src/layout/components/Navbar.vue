@@ -51,7 +51,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
-import { updatePass } from '@/api/user'
+import { updatePass } from '@/api/auth'
 
 export default {
   components: {

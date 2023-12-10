@@ -17,13 +17,23 @@
   </div>
 </template>
 <script>
+import { customer, opCustomer } from '@/api/user'
 export default {
   data(){
     return {}
   },
-  methods: {}
+  created(){
+    this.apiCustomer()
+  },
+  methods: {
+    apiCustomer(){
+      customer({pageNo: 1, pageSize: 20}).then((res)=>{
+
+      })
+    },
+  }
 }
 </script>
 <style lang="scss" scoped>
-  
+
 </style>

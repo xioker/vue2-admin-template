@@ -1,20 +1,151 @@
 <template>
   <div>
-    <el-form>
-      <el-form-item label="创建时间">
-        <el-input></el-input>
-      </el-form-item>
-    </el-form>
+    <el-row style="margin-bottom: 10px;">
+      <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
+    </el-row>
+    <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+      <template #sendCustType="{row}">
+        <span>{{ ['全体','会员','普通用户'][row.sendCustType] }}</span>
+      </template>
+      <template #sendStatus="{row}">
+        <el-tag :type="row.sendStatus && row.sendStatus == 1 ? 'success' : 'danger'">{{ row.sendStatus && row.sendStatus == 1 ? '已发送' : '未发送' }}</el-tag>
+      </template>
+      <template #action="{row}">
+        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiMailDetail(row)">编辑</el-button>
+        <el-popconfirm @onConfirm="onStatus(row)" :title="`确定发送吗`" style="margin-left:10px">
+          <el-button slot="reference" size="mini" type="success" :disabled="row.sendStatus == 1">发送</el-button>
+        </el-popconfirm>
+        <el-popconfirm @onConfirm="onDel(row)" :title="`确定删除吗`" style="margin-left:10px">
+          <el-button slot="reference" size="mini" type="danger">删除</el-button>
+        </el-popconfirm>
+      </template>
+    </MyTable>
+    <!-- 修改新增弹框 -->
+    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
+      <el-form ref="mail" :model="mailForm" label-position="right" label-width="80px">
+        <el-form-item label="标题" prop="titile" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
+          <el-input type="text" v-model="mailForm.titile" placeholder="请输入标题" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="内容" prop="content" :rules="[{trigger:'blur',message: '内容不能为空',required: true}]">
+          <el-input type="textarea" v-model="mailForm.content" placeholder="请输入内容" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="发送对象" prop="sendCustType" :rules="[{trigger:'blur',message: '发送对象不能为空',required: true}]">
+          <el-select v-model="mailForm.sendCustType" placeholder="请选择发送对象" style="width:100%">
+            <el-option label="全体" :value="0">全体</el-option>
+            <el-option label="会员" :value="1">会员</el-option>
+            <el-option label="普通用户" :value="2">普通用户</el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="onDialogCancle">取 消</el-button>
+        <el-button type="primary" @click="onDialogSure">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
+import { mailList, mailDel, mailSave, mailSend } from '@/api/user'
+import MyTable from '@/components/MyTable/index.vue'
 export default {
-  data(){
-    return {}
+  components: {
+    MyTable
   },
-  methods: {}
+  data() {
+    return {
+      // 表格数据
+      tableList: [],
+      // 表格loading
+      tableLoading: true,
+      columns: [
+        {label: '标题', prop: 'titile'},
+        {label: '内容', prop: 'content'},
+        {label: '创建人', prop: 'createName'},
+        {label: '创建时间', prop: 'createTime'},
+        {slot: 'sendCustType',label: '发送对象', prop: 'sendCustType'},
+        {slot: 'sendStatus',label: '发送状态', prop: 'sendStatus'},
+        {label: '发送时间', prop: 'sendTime'},
+        {slot: 'action', label: '操作', prop: 'action', fixed: 'right', width:'300'},
+      ],
+      // 修改新增弹框数据
+      title: '新增',
+      visible: false,
+      mailForm: {
+        maiId: '',
+        titile: '',
+        content: '',
+        sendCustType: ''
+      }
+    }
+  },
+  created() {
+    this.apiMailList()
+  },
+  methods: {
+    // 列表接口
+    apiMailList(){
+      mailList({pageNo:1, pageSize: 20}).then(res => {
+        this.tableList = res.list || []
+        this.tableLoading = false
+      }).catch(()=>this.tableLoading = false)
+    },
+    // 新增
+    onAdd(){
+      this.title = '新增'
+      this.visible = true
+      this.$nextTick(()=>{
+        this.mailForm.maiId = ''
+        this.mailForm.titile = ''
+        this.mailForm.content = ''
+        this.mailForm.sendCustType = ''
+      })
+    },
+    onDialogCancle(){
+      this.title = '新增' && this.$refs.mail.clearValidate()
+      this.visible = false
+    },
+    onDialogSure(){
+      this.$refs.mail.validate((valid) => {
+        if(valid){
+          const { maiId } = this.mailForm
+          mailSave(this.mailForm).then(()=>{
+            this.apiMailList()
+            this.visible = false
+            this.$refs.mail.resetFields()
+            this.$message.success(`${maiId ? '编辑' : '新增'}成功`)
+          })
+        }
+      })
+    },
+    // 详情数据接口
+    apiMailDetail({maiId, titile, content, isDel, sendCustType }) {
+      this.title = '编辑'
+      this.mailForm.maiId = maiId
+      this.mailForm.titile = titile
+      this.mailForm.content = content
+      this.mailForm.sendCustType = Number(sendCustType)
+      this.visible = true
+      // userDetail({userId}).then(res => {
+      //   console.log(res)
+      // })
+    },
+    // 发送站内信操作事件
+    onStatus({ maiId:mailId }){
+      mailSend({ mailId }).then(() => {
+        this.apiMailList()
+        this.$message.success(`发送成功`)
+      })
+    },
+    // 删除站内信操作事件
+    onDel({ maiId:mailId }){
+      mailDel({ mailId }).then(() => {
+        this.apiMailList()
+        this.$message.success(`删除成功`)
+      })
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
-  
+
 </style>
