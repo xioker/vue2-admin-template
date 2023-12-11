@@ -8,8 +8,8 @@
         <el-tag :type="row.status == 1 ? 'success' : 'danger'">{{ row.status == 1 ? '已启用' : '已禁用' }}</el-tag>
       </template>
       <template #action="{row}">
-        <el-button size="mini" type="primary" icon="el-icon-edit">菜单配置</el-button>
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiRoleDetail(row)">编辑</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-setting" @click="dialogVisible = true">菜单配置</el-button>
         <!-- <el-popconfirm @onConfirm="onStatus(row)" :title="`确定${row.status == 1 ? '禁用' : '启用'}吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
         </el-popconfirm> -->
@@ -36,10 +36,37 @@
         <el-button type="primary" @click="onDialogSure">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 添加编辑弹窗 -->
+		<el-drawer title="菜单配置" :visible.sync="dialogVisible" :close-on-click-modal="false" :close-on-press-escape="false" destroy-on-close	>
+			<template #default >
+				<div v-loading="loading">
+					<el-form label-position="top" ref="apiForm" style="width: 70%;margin: auto;">
+						<el-form-item>
+							<el-card style="width: 100%;margin: auto;">
+								<el-tree
+									style="height:500px;overflow-y: auto;"
+									ref="treeRef"
+									:default-checked-keys="comKeys"
+									:data="treeData"
+									show-checkbox
+									default-expand-all
+									node-key="id"
+									:props="{children: 'children',label: 'name'}"
+								/>
+							</el-card>
+						</el-form-item>
+					</el-form>
+					<div style="text-align: start;width: 70%;margin: auto;">
+						<el-button type="primary" @click="onFormSubmit" :loading="btnLoading">保存</el-button>
+						<el-button @click="onFormCancle">取消</el-button>
+					</div>
+				</div>
+			</template>
+		</el-drawer>
   </div>
 </template>
 <script>
-import { roleList, roleDetail, roleOper, roleSave } from '@/api/auth'
+import { roleList, roleDetail, roleOper, roleSave, menuList } from '@/api/auth'
 import MyTable from '@/components/MyTable/index.vue'
 export default {
   components: {
@@ -69,17 +96,39 @@ export default {
         roleName: '',
         roleOrder: 0,
         status: 1
-      }
+      },
+      // 菜单配置
+      menu_ids: [],
+      dialogVisible: false,
+      treeData: [],
+      loading: false,
+      btnLoading: false
     }
   },
   created() {
     this.apiRoleList()
+    this.apiMenuList()
+  },
+  computed: {
+    comKeys(){{
+      if( typeof this.menu_ids === 'string'){
+        return []
+      }
+      return this.menu_ids
+    }}
   },
   methods: {
     // 列表接口
     apiRoleList(){
       roleList({pageNo:1, pageSize: 20}).then(res => {
         this.tableList = res.list || []
+        this.tableLoading = false
+      }).catch(()=>this.tableLoading = false)
+    },
+    // 菜单列表接口
+    apiMenuList(){
+      menuList({pageNo:1, pageSize: 100}).then(res => {
+        this.treeData = res.list || []
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
     },
@@ -95,7 +144,7 @@ export default {
       })
     },
     onDialogCancle(){
-      this.title = '新增' && this.$refs.role.clearValidate()
+      this.title === '新增' && this.$refs.role.clearValidate()
       this.visible = false
     },
     onDialogSure(){
@@ -130,9 +179,39 @@ export default {
         this.$message.success(`${status == '1' ? '禁用' : '启用'}成功`)
       })
     },
+    handleData(tree){
+      let result = []
+      if (Array.isArray(tree) && tree?.length) {
+        tree.forEach(item => {
+            result.push(item.id)
+            if (item?.children) result.push(...this.handleData(item.children))
+        }) 
+      }
+      return result
+    },
+    // 设置全选和非全选
+    onSelectAll(type) {
+      if(type === 1){
+        this.$refs.treeRef.setCheckedKeys(this.handleData(this.treeData))
+        return
+      }
+      this.$refs.treeRef.setCheckedKeys([])
+    }
   },
 }
 </script>
 <style lang="scss" scoped>
-
+::v-deep.el-drawer {
+	width: calc(100vw - 210px) !important;
+}
+::v-deep.el-drawer__body{
+	border-top: 1px solid #ebebeb;
+}
+ 
+::v-deep.el-tree-node__content{
+	border: 1px solid #ebebeb;
+	padding: 18px 6px;
+	border-radius: 6px;
+	margin-bottom: 6px;
+}
 </style>

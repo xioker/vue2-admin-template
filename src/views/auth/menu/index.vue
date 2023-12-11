@@ -23,6 +23,7 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
+        {label: '序号', prop: 'index'},
         {label: '菜单名', prop: 'menuName'},
         {slot: 'status', label: '状态', prop: 'status'},
         {label: '创建人', prop: 'createId'},
@@ -40,7 +41,7 @@ export default {
   methods: {
     // 列表接口
     apiMenuList(){
-      menuList({pageNo:1, pageSize: 20}).then(res => {
+      menuList({pageNo:1, pageSize: 100}).then(res => {
         this.tableList = res.list || []
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)

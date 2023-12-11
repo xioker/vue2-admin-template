@@ -41,4 +41,29 @@ export function bannerSort(data) {
   })
 }
 
+// 主题设置列表
+export function themeList(data) {
+  return request({
+    url: '/sys-theme/page_list',
+    method: 'post',
+    data
+  })
+}
+// 主题设置保存
+export function themeSave(data) {
+  return request({
+    url: '/sys-theme/theme_save',
+    method: 'post',
+    data
+  })
+}
+// 主题设置删除
+export function themeDel(data) {
+  return request({
+    url: '/sys-theme/theme_del',
+    method: 'post',
+    data
+  })
+}
+
 

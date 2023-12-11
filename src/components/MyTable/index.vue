@@ -8,6 +8,7 @@
         :fixed="co.fixed || false"
         :align="co.align || 'center'"
         :key="ind"
+        type="selection"
         v-if="co.prop === 'selection'"
       />
       <el-table-column
@@ -17,6 +18,7 @@
         :fixed="co.fixed || false"
         :align="co.align || 'center'"
         :key="co.label"
+        type="index"
         v-else-if="co.prop === 'index'"
       />
       <el-table-column

@@ -16,7 +16,7 @@ const componentsRouter = {
       path: 'member',
       component: () => import('@/views/user/member/index'),
       name: 'Member',
-      meta: { title: '会员管理' }
+      meta: { title: '会员列表' }
     },
     {
       path: 'memberLevel',

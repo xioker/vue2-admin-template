@@ -7,7 +7,7 @@
     <div class="right-menu ">
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper flex-c-c">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
           {{ name || '' }}<i class="el-icon-caret-bottom" ></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -22,21 +22,15 @@
     <!-- 修改密码弹框 -->
     <el-dialog append-to-body title="修改密码" :visible.sync="pwdShow" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onCancle">
       <el-form ref="pwdForm" :model="pwdForm" :rules="rules" label-position="right" label-width="80px">
-        <el-row>
-          <el-form-item label="原密码" prop="oldPassWord">
-            <el-input type="password" v-model="pwdForm.oldPassWord" placeholder="请输入原密码" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="新密码" prop="newPassWord">
-            <el-input type="password" v-model="pwdForm.newPassWord" placeholder="请输入新密码" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="确认密码" prop="surePassword">
-            <el-input type="password" v-model="pwdForm.surePassword" placeholder="请输入确认密码" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-row>
+        <el-form-item label="原密码" prop="oldPassWord">
+          <el-input type="password" v-model="pwdForm.oldPassWord" placeholder="请输入原密码" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassWord">
+          <el-input type="password" v-model="pwdForm.newPassWord" placeholder="请输入新密码" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="surePassword">
+          <el-input type="password" v-model="pwdForm.surePassword" placeholder="请输入确认密码" autocomplete="off"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="onCancle">取 消</el-button>

@@ -101,7 +101,7 @@ export default {
       })
     },
     onDialogCancle(){
-      this.title = '新增' && this.$refs.mail.clearValidate()
+      this.title === '新增' && this.$refs.mail.clearValidate()
       this.visible = false
     },
     onDialogSure(){
