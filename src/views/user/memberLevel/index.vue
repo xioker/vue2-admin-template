@@ -138,7 +138,7 @@ export default {
       this.levelForm.levelId = levelId
       this.levelForm.levelName = levelName
       this.levelForm.gold = gold
-      this.levelForm.meetType = meetType
+      this.levelForm.meetType = Number(meetType)
       this.levelForm.readTimes = readTimes
       this.levelForm.isDel = isDel ? Number(isDel) : 0
       this.levelForm.description = description
