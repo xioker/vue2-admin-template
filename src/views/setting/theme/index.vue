@@ -27,9 +27,24 @@
     <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination"></Pagination>
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
-      <el-form ref="label" :model="labelForm" label-position="right" label-width="60px">
-        <el-form-item label="标题" prop="title" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
-          <el-input type="text" v-model="labelForm.title" placeholder="请输入标题" autocomplete="off"></el-input>
+      <el-form ref="label" :model="labelForm" label-position="right" label-width="80px">
+        <el-form-item label="主题名称" prop="themeName" :rules="[{trigger:'blur',message: '主题名称不能为空',required: true}]">
+          <el-input type="text" v-model="labelForm.themeName" placeholder="请输入主题名称" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" prop="isDel">
+          <el-radio-group v-model="labelForm.isDel">
+            <el-radio :label="0">启用</el-radio>
+            <el-radio :label="1">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="VIP专属" prop="isVip">
+          <el-radio-group v-model="labelForm.isVip">
+            <el-radio :label="0">否</el-radio>
+            <el-radio :label="1">是</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="主题图片" prop="themeImg">
+          <el-input type="text" v-model="labelForm.themeImg" placeholder="请输入标题" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -67,8 +82,12 @@ export default {
       title: '新增',
       visible: false,
       labelForm: {
-        labelId: '',
-        title: '',
+        themeId: '',
+        themeName: '',
+        themeImg: '',
+        isVip:0,
+        isDel: 0,
+        levelId: 0
       }
     }
   },
@@ -95,8 +114,12 @@ export default {
       this.title = '新增'
       this.visible = true
       this.$nextTick(()=>{
-        this.labelForm.labelId = ''
-        this.labelForm.title = ''
+        this.labelForm.themeId = ''
+        this.labelForm.themeName = ''
+        this.labelForm.themeImg = ''
+        this.labelForm.isVip = 0
+        this.labelForm.isVip = 0
+        this.labelForm.levelId = ''
       })
     },
     // 重置
@@ -111,29 +134,33 @@ export default {
     onDialogSure(){
       this.$refs.label.validate((valid) => {
         if(valid){
-          const { labelId } = this.labelForm
+          const { themeId } = this.labelForm
           themeSave(this.labelForm).then(()=>{
             this.apiLabelList()
             this.visible = false
             this.$refs.label.resetFields()
-            this.$message.success(`${labelId ? '编辑' : '新增'}成功`)
+            this.$message.success(`${themeId ? '编辑' : '新增'}成功`)
           })
         }
       })
     },
     // 详情数据接口
-    apiLabelDetail({ labelId, title }) {
+    apiLabelDetail({ themeId, themeName, themeImg, isVip, isDel, levelId }) {
       this.title = '编辑'
-      this.labelForm.labelId = labelId
-      this.labelForm.title = title
+      this.labelForm.themeId = themeId
+      this.labelForm.themeName = themeName
+      this.labelForm.themeImg = themeImg
+      this.labelForm.isVip = Number(isVip)
+      this.labelForm.isVip = Number(isDel)
+      this.labelForm.levelId = levelId
       this.visible = true
       // userDetail({userId}).then(res => {
       //   console.log(res)
       // })
     },
     // 删除数据接口
-    apiLabelDelete({ labelId: bookLabelId }) {
-      themeDel({ bookLabelId }).then(() => {
+    apiLabelDelete({ themeId, levelId }) {
+      themeDel({ themeId, levelId }).then(() => {
         this.apiLabelList()
         this.$message.success(`删除成功`)
       })
