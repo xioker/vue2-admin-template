@@ -30,7 +30,7 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
-  background-color: #ebecee;
+  background-color: #F1F1F1;
   padding: 20px;
 }
 

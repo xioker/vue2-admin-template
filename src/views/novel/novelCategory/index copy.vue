@@ -20,14 +20,27 @@
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="600px" :before-close="onDialogCancle">
       <el-form ref="type" :model="typeForm" label-position="right" label-width="110px">
-        <el-form-item label="一级分类标题" prop="bigTypeTitle" :rules="[{trigger:'blur',message: '一级分类标题不能为空',required: true}]">
-          <el-input type="text" v-model="typeForm.bigTypeTitle" placeholder="请输入一级分类标题" autocomplete="off"></el-input>
+        <el-form-item label="一级分类标题" prop="bigTypeId" :rules="[{trigger:'blur',message: '一级分类标题不能为空',required: true}]">
+          <el-input type="text" v-model="typeForm.bigTypeId" placeholder="请输入一级分类标题" autocomplete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="标题简写" prop="bigTypeDesc">
-          <el-input type="text" v-model="typeForm.bigTypeDesc" placeholder="请输入标题简写" autocomplete="off"></el-input>
+        <el-form-item label="二级分类标题" prop="typeTitle" :rules="[{trigger:'blur',message: '二级分类标题不能为空',required: true}]">
+          <el-input type="text" v-model="typeForm.typeTitle" placeholder="请输入二级分类标题" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="阅读时长" prop="readCount">
+          <el-input type="text" v-model="typeForm.readCount" placeholder="请输入阅读时长" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sortNum">
           <el-input-number v-model="typeForm.sortNum"></el-input-number>
+        </el-form-item>
+        <el-form-item label="男/女" prop="channelBelong">
+          <el-radio-group v-model="typeForm.channelBelong">
+            <el-radio :label="1">男</el-radio>
+            <el-radio :label="2">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="分类图片" prop="typePic">
+          <!-- <el-input type="number" v-model="typeForm.typePic" placeholder="请输入赠送金币" autocomplete="off"></el-input> -->
+          <SingleImage2></SingleImage2>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -38,7 +51,7 @@
   </div>
 </template>
 <script>
-import { bookBigTypeList, bookBigTypeDetail, bookBigTypeDelete, bookBigTypeSave } from '@/api/novel'
+import { bookTypeList, bookTypeDetail, bookTypeDelete, bookTypeSave } from '@/api/novel'
 import MyTable from '@/components/MyTable/index.vue'
 import SingleImage2 from '@/components/Upload/SingleImage2.vue'
 export default {
@@ -54,8 +67,11 @@ export default {
       tableLoading: true,
       columns: [
         {label: '排序', prop: 'sortNum'},
-        {label: '一级分类标题', prop: 'bigTypeTitle'},
-        {label: '标题简写', prop: 'bigTypeDesc'},
+        {label: '一级分类标题', prop: 'bigTypeId'},
+        {label: '二级分类标题', prop: 'typeTitle'},
+        {label: '阅读时长', prop: 'readCount'},
+        {slot: 'typePic', label: '分类图片', prop: 'typePic'},
+        {slot: 'channelBelong', label: '男/女', prop: 'channelBelong'},
         {label: '创建时间', prop: 'createdTime'},
         {label: '更新时间', prop: 'updateTime'},
         {slot: 'action', label: '操作', prop: 'action'},
@@ -65,9 +81,12 @@ export default {
       visible: false,
       typeForm: {
         bigTypeId: '',
-        bigTypeTitle: '',
-        bigTypeDesc: '',
+        typeId: '',
+        typeTitle: '',
+        readCount: '',
         sortNum: 0,
+        channelBelong: 1,
+        typePic: '',
       }
     }
   },
@@ -77,7 +96,7 @@ export default {
   methods: {
     // 列表接口
     apiBookTypeList(){
-      bookBigTypeList({pageNo:1, pageSize: 20}).then(res => {
+      bookTypeList({pageNo:1, pageSize: 20}).then(res => {
         this.tableList = res.list || []
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
@@ -88,9 +107,12 @@ export default {
       this.visible = true
       this.$nextTick(()=>{
         this.typeForm.bigTypeId = ''
-        this.typeForm.bigTypeTitle = ''
-        this.typeForm.bigTypeDesc = ''
+        this.typeForm.typeId = ''
+        this.typeForm.typeTitle = ''
+        this.typeForm.readCount = ''
         this.typeForm.sortNum = 0
+        this.typeForm.channelBelong = 1
+        this.typeForm.typePic = ''
       })
     },
     onDialogCancle(){
@@ -100,31 +122,34 @@ export default {
     onDialogSure(){
       this.$refs.type.validate((valid) => {
         if(valid){
-          const { bigTypeId } = this.typeForm
-          bookBigTypeSave(this.typeForm).then(()=>{
+          const { typeId } = this.typeForm
+          bookTypeSave(this.typeForm).then(()=>{
             this.apiBookTypeList()
             this.visible = false
             this.$refs.type.resetFields()
-            this.$message.success(`${bigTypeId ? '编辑' : '新增'}成功`)
+            this.$message.success(`${typeId ? '编辑' : '新增'}成功`)
           })
         }
       })
     },
     // 详情数据接口
-    apiBookTypeDetail({bigTypeId, bigTypeTitle, bigTypeDesc, sortNum }) {
+    apiBookTypeDetail({bigTypeId, typeId, typeTitle, typePic, readCount, sortNum, channelBelong}) {
       this.title = '编辑'
       this.typeForm.bigTypeId = bigTypeId
-      this.typeForm.bigTypeTitle = bigTypeTitle
-      this.typeForm.bigTypeDesc = bigTypeDesc
+      this.typeForm.typeId = typeId
+      this.typeForm.typeTitle = typeTitle
+      this.typeForm.readCount = readCount
       this.typeForm.sortNum = Number(sortNum || 0)
+      this.typeForm.channelBelong = Number(channelBelong)
+      this.typeForm.typePic = typePic
       this.visible = true
       // userDetail({userId}).then(res => {
       //   console.log(res)
       // })
     },
     // 删除数据接口
-    apiBookTypeDelete({ bigTypeId:bookBigTypeId  }) {
-      bookBigTypeDelete({ bookBigTypeId }).then(res => {
+    apiBookTypeDelete({ typeId:bookTypeId  }) {
+      bookTypeDelete({ bookTypeId }).then(res => {
         this.apiBookTypeList()
         this.$message.success(`删除成功`)
       })

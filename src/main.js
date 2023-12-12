@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
-import 'normalize.css/normalize.css' // a modern alternative to CSS resets
+import 'normalize.css/normalize.css'
 
 import Element from 'element-ui'
 import './styles/element-variables.scss'
@@ -13,12 +13,16 @@ import store from './store'
 import router from './router'
 
 import './icons' // icon
-import './permission' // permission control
+import './permission'
 
 import * as filters from './filters' // global filters
+import MyTable from '@/components/MyTable/index.vue'
+import Pagination from '@/components/Pagination/index.vue'
+Vue.component('MyTable', MyTable)
+Vue.component('Pagination', Pagination)
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium', // set element-ui default size
+  size: Cookies.get('size') || 'medium',
   // locale: enLang // 如果使用中文，无需设置，请删除
 })
 

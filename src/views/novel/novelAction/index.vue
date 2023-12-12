@@ -24,8 +24,9 @@
         </el-popconfirm>
       </template>
     </MyTable>
+    <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination"></Pagination>
     <!-- 修改新增弹框 -->
-    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="600px" :before-close="onDialogCancle">
+    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
       <el-form ref="label" :model="labelForm" label-position="right" label-width="60px">
         <el-form-item label="标题" prop="title" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
           <el-input type="text" v-model="labelForm.title" placeholder="请输入标题" autocomplete="off"></el-input>
@@ -40,11 +41,7 @@
 </template>
 <script>
 import { labelList, labelDelete, labelSave } from '@/api/novel'
-import MyTable from '@/components/MyTable/index.vue'
 export default {
-  components: {
-    MyTable
-  },
   data() {
     return {
       // 搜索表单
@@ -53,15 +50,17 @@ export default {
         pageSize: 20,
         keyword: ''
       },
+      total: 0,
       // 表格数据
       tableList: [],
       // 表格loading
       tableLoading: true,
       columns: [
+        {label: '序号', prop: 'index'},
         {label: '标题', prop: 'title'},
-        {label: '创建人', prop: 'createdId'},
+        // {label: '创建人', prop: 'createdId'},
         {label: '创建时间', prop: 'createdTime'},
-        {label: '更新人', prop: 'updateId'},
+        // {label: '更新人', prop: 'updateId'},
         {label: '更新时间', prop: 'updateTime'},
         {slot: 'action', label: '操作', prop: 'action'},
       ],
@@ -83,8 +82,14 @@ export default {
       if(this.tableLoading === false) this.tableLoading = true
       labelList(this.searchForm).then(res => {
         this.tableList = res.list || []
+        this.total = Number(res.total) || 0
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
+    },
+    onPagination({page, limit}){
+      this.searchForm.pageNo = page
+      this.searchForm.pageSize = limit
+      this.apiLabelList()
     },
     // 新增
     onAdd(){

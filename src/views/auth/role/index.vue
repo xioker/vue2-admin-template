@@ -79,12 +79,13 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
+        {label: '序号', prop: 'index'},
         {label: '角色名称', prop: 'roleName'},
         {slot: 'status', label: '状态', prop: 'status'},
         {label: '次序', prop: 'roleOrder'},
-        {label: '创建人', prop: 'createId'},
+        // {label: '创建人', prop: 'createId'},
         {label: '创建时间', prop: 'createTime'},
-        {label: '更新人', prop: 'updateId'},
+        // {label: '更新人', prop: 'updateId'},
         {label: '更新时间', prop: 'updateTime'},
         {slot: 'action', label: '操作', prop: 'action'},
       ],
