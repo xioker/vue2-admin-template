@@ -69,10 +69,11 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
-        {label: '序号', prop: 'index'},
-        {label: '标题', prop: 'title'},
-        // {label: '创建人', prop: 'createdId'},
-        {label: '创建时间', prop: 'createdTime'},
+        {label: '头像', prop: 'custHead'},
+        {label: '用户昵称', prop: 'custName'},
+        {label: '手机号码', prop: 'phone'},
+        {label: '订单号', prop: 'orderNo'},
+        {label: '订单金额', prop: 'orderPrice'},
         // {label: '更新人', prop: 'updateId'},
         {label: '更新时间', prop: 'updateTime'},
         {slot: 'action', label: '操作', prop: 'action'},
