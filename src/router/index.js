@@ -31,27 +31,13 @@ import componentsRouter from './modules/components'
 
 
 export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
+  // 登录
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
+  // 首页
   {
     path: '/',
     component: Layout,
@@ -65,6 +51,12 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  
   // 菜单管理
   {
     path: '/auth',
@@ -106,7 +98,43 @@ export const constantRoutes = [
     ]
   },
   componentsRouter,
-  
+  // 小说管理
+  {
+    path: '/novel',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Novel',
+    meta: {
+      title: '小说管理',
+      icon: 'el-icon-reading'
+    },
+    children: [
+      {
+        path: 'novelList',
+        component: () => import('@/views/novel/novelList/index'),
+        name: 'NovelList',
+        meta: { title: '小说列表', noCache: true }
+      },
+      {
+        path: 'novelCategory',
+        component: () => import('@/views/novel/novelCategory/index'),
+        name: 'NovelCategory',
+        meta: { title: '小说分类', noCache: true }
+      },
+      {
+        path: 'novelAction',
+        component: () => import('@/views/novel/novelAction/index'),
+        name: 'NovelAction',
+        meta: { title: '小说活动标签', noCache: true }
+      },
+      {
+        path: 'order',
+        component: () => import('@/views/novel/order/index'),
+        name: 'Order',
+        meta: { title: '订单列表', noCache: true }
+      }
+    ]
+  },
   // 设置管理
   {
     path: '/setting',
@@ -140,36 +168,26 @@ export const constantRoutes = [
       },
     ]
   },
-  
-  // 小说管理
+  // 系统设置
   {
-    path: '/novel',
+    path: '/sysSetting',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'Novel',
+    alwaysShow: true, // will always show the root menu
+    name: 'SysSetting',
     meta: {
-      title: '小说管理',
-      icon: 'el-icon-reading'
+      title: '系统管理',
+      icon: 'el-icon-s-tools',
     },
     children: [
       {
-        path: 'novelList',
-        component: () => import('@/views/novel/novelList/index'),
-        name: 'NovelList',
-        meta: { title: '小说列表', noCache: true }
+        path: 'SystemSetting',
+        component: () => import('@/views/systemSetting/index'),
+        name: 'SystemSetting',
+        meta: {
+          title: '系统设置',
+        }
       },
-      {
-        path: 'novelCategory',
-        component: () => import('@/views/novel/novelCategory/index'),
-        name: 'NovelCategory',
-        meta: { title: '小说分类', noCache: true }
-      },
-      {
-        path: 'novelAction',
-        component: () => import('@/views/novel/novelAction/index'),
-        name: 'NovelAction',
-        meta: { title: '小说活动标签', noCache: true }
-      }
     ]
   },
   // 404 page must be placed at the end !!!

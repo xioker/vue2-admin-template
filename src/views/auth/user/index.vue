@@ -62,11 +62,7 @@
 </template>
 <script>
 import { userList, userDetail, userSave, userOper, userAddRole, roleList } from '@/api/auth'
-import MyTable from '@/components/MyTable/index.vue'
 export default {
-  components: {
-    MyTable
-  },
   data() {
     return {
       // 表格数据

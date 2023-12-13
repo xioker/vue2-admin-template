@@ -40,7 +40,7 @@
 		<el-drawer title="菜单配置" :visible.sync="dialogVisible" :close-on-click-modal="false" :close-on-press-escape="false" destroy-on-close	>
 			<template #default >
 				<div v-loading="loading">
-					<el-form label-position="top" ref="apiForm" style="width: 70%;margin: auto;">
+					<el-form label-position="top" ref="apiForm" style="width: 90%;margin: auto;">
 						<el-form-item>
 							<el-card style="width: 100%;margin: auto;">
 								<el-tree
@@ -51,12 +51,12 @@
 									show-checkbox
 									default-expand-all
 									node-key="id"
-									:props="{children: 'children',label: 'name'}"
+									:props="{children: 'children',label: 'menuName'}"
 								/>
 							</el-card>
 						</el-form-item>
 					</el-form>
-					<div style="text-align: start;width: 70%;margin: auto;">
+					<div style="text-align: start;width: 90%;margin: auto;">
 						<el-button type="primary" @click="onFormSubmit" :loading="btnLoading">保存</el-button>
 						<el-button @click="onFormCancle">取消</el-button>
 					</div>
@@ -67,11 +67,7 @@
 </template>
 <script>
 import { roleList, roleDetail, roleOper, roleSave, menuList } from '@/api/auth'
-import MyTable from '@/components/MyTable/index.vue'
 export default {
-  components: {
-    MyTable
-  },
   data() {
     return {
       // 表格数据
@@ -202,17 +198,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-::v-deep.el-drawer {
+::v-deep .el-drawer {
 	width: calc(100vw - 210px) !important;
+  .el-tree-node__content{
+    border: 1px solid #ebebeb;
+    padding: 18px 6px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
 }
-::v-deep.el-drawer__body{
-	border-top: 1px solid #ebebeb;
-}
- 
-::v-deep.el-tree-node__content{
-	border: 1px solid #ebebeb;
-	padding: 18px 6px;
-	border-radius: 6px;
-	margin-bottom: 6px;
-}
+
 </style>

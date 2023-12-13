@@ -1,25 +1,28 @@
 <template>
   <div>
     <el-form inline>
-      <el-form-item label="标题" prop="keyword">
-        <el-input type="text" v-model="searchForm.keyword" placeholder="请输入标题" clearable></el-input>
+      <el-form-item label="VIP专属" prop="isVip">
+        <el-select v-model="searchForm.isVip" placeholder="请选择VIP专属" clearable>
+          <el-option label="是" :value="1" />
+          <el-option label="否" :value="0" />
+        </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click.stop="apiLabelList">查询</el-button>
+        <el-button type="primary" @click.stop="apiThemeList">查询</el-button>
         <el-button type="info" @click.stop="onReset">重置</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #isDel="{row}">
-        <el-tag :type="row.isDel && row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel && row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
+        <el-tag :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
       </template>
-      <template #meetType="{row}">
-        <span>{{ row.meetType == 1 ? '开通会员' : '阅读时长' }}</span>
+      <template #isVip="{row}">
+        <el-tag :type="row.isVip == 1 ? 'success' : 'danger'">{{ row.isVip == 1 ? '是' : '否' }}</el-tag>
       </template>
       <template #action="{row}">
-        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiLabelDetail(row)">编辑</el-button>
-        <el-popconfirm @onConfirm="apiLabelDelete(row)" :title="`确定删除标签【${row.title}】吗`" style="margin-left:10px">
+        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiThemeDetail(row)">编辑</el-button>
+        <el-popconfirm @onConfirm="apiThemeDelete(row)" :title="`确定删除主题【${row.themeName}】吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="danger" icon="el-icon-delete">删除</el-button>
         </el-popconfirm>
       </template>
@@ -27,24 +30,18 @@
     <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination"></Pagination>
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
-      <el-form ref="label" :model="labelForm" label-position="right" label-width="80px">
+      <el-form ref="theme" :model="themeForm" label-position="right" label-width="80px">
         <el-form-item label="主题名称" prop="themeName" :rules="[{trigger:'blur',message: '主题名称不能为空',required: true}]">
-          <el-input type="text" v-model="labelForm.themeName" placeholder="请输入主题名称" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="isDel">
-          <el-radio-group v-model="labelForm.isDel">
-            <el-radio :label="0">启用</el-radio>
-            <el-radio :label="1">禁用</el-radio>
-          </el-radio-group>
+          <el-input type="text" v-model="themeForm.themeName" placeholder="请输入主题名称" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="VIP专属" prop="isVip">
-          <el-radio-group v-model="labelForm.isVip">
+          <el-radio-group v-model="themeForm.isVip">
             <el-radio :label="0">否</el-radio>
             <el-radio :label="1">是</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="主题图片" prop="themeImg">
-          <el-input type="text" v-model="labelForm.themeImg" placeholder="请输入标题" autocomplete="off"></el-input>
+          <el-input type="text" v-model="themeForm.themeImg" placeholder="请输入标题" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -61,9 +58,9 @@ export default {
     return {
       // 搜索表单
       searchForm: {
+        isVip: '',
         pageNo:1,
         pageSize: 20,
-        keyword: ''
       },
       total: 0,
       // 表格数据
@@ -71,32 +68,32 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
-        {label: '标题', prop: 'title'},
-        {label: '创建人', prop: 'createdId'},
-        {label: '创建时间', prop: 'createdTime'},
-        {label: '更新人', prop: 'updateId'},
-        {label: '更新时间', prop: 'updateTime'},
+        {label: '主题名称', prop: 'themeName'},
+        {label: '主题图片', prop: 'themeImg'},
+        {slot: 'isDel', label: '状态', prop: 'isDel'},
+        {slot: 'isVip', label: 'VIP专属', prop: 'isVip'},
+        {label: '创建人', prop: 'createName'},
+        {label: '更新时间', prop: 'createTime'},
         {slot: 'action', label: '操作', prop: 'action'},
       ],
       // 修改新增弹框数据
       title: '新增',
       visible: false,
-      labelForm: {
+      themeForm: {
         themeId: '',
         themeName: '',
         themeImg: '',
         isVip:0,
-        isDel: 0,
-        levelId: 0
+        levelId: ''
       }
     }
   },
   created() {
-    this.apiLabelList()
+    this.apiThemeList()
   },
   methods: {
     // 列表接口
-    apiLabelList(){
+    apiThemeList(){
       if(this.tableLoading === false) this.tableLoading = true
       themeList(this.searchForm).then(res => {
         this.tableList = res.list || []
@@ -107,61 +104,59 @@ export default {
     onPagination({page, limit}){
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
-      this.apiLabelList()
+      this.apiThemeList()
     },
     // 新增
     onAdd(){
       this.title = '新增'
       this.visible = true
       this.$nextTick(()=>{
-        this.labelForm.themeId = ''
-        this.labelForm.themeName = ''
-        this.labelForm.themeImg = ''
-        this.labelForm.isVip = 0
-        this.labelForm.isVip = 0
-        this.labelForm.levelId = ''
+        this.themeForm.themeId = ''
+        this.themeForm.themeName = ''
+        this.themeForm.themeImg = ''
+        this.themeForm.isVip = 0
+        this.themeForm.levelId = ''
       })
     },
     // 重置
     onReset(){
-      this.searchForm.keyword = ''
-      this.apiLabelList()
+      this.searchForm.isVip = ''
+      this.apiThemeList()
     },
     onDialogCancle(){
-      this.title === '新增' && this.$refs.label.clearValidate()
+      this.title === '新增' && this.$refs.theme.clearValidate()
       this.visible = false
     },
     onDialogSure(){
-      this.$refs.label.validate((valid) => {
+      this.$refs.theme.validate((valid) => {
         if(valid){
-          const { themeId } = this.labelForm
-          themeSave(this.labelForm).then(()=>{
-            this.apiLabelList()
+          const { themeId } = this.themeForm
+          themeSave(this.themeForm).then(()=>{
+            this.apiThemeList()
             this.visible = false
-            this.$refs.label.resetFields()
+            this.$refs.theme.resetFields()
             this.$message.success(`${themeId ? '编辑' : '新增'}成功`)
           })
         }
       })
     },
     // 详情数据接口
-    apiLabelDetail({ themeId, themeName, themeImg, isVip, isDel, levelId }) {
+    apiThemeDetail({ themeId, themeName, themeImg, isVip, isDel, levelId }) {
       this.title = '编辑'
-      this.labelForm.themeId = themeId
-      this.labelForm.themeName = themeName
-      this.labelForm.themeImg = themeImg
-      this.labelForm.isVip = Number(isVip)
-      this.labelForm.isVip = Number(isDel)
-      this.labelForm.levelId = levelId
+      this.themeForm.themeId = themeId
+      this.themeForm.themeName = themeName
+      this.themeForm.themeImg = themeImg
+      this.themeForm.isVip = Number(isVip)
+      this.themeForm.levelId = levelId
       this.visible = true
       // userDetail({userId}).then(res => {
       //   console.log(res)
       // })
     },
     // 删除数据接口
-    apiLabelDelete({ themeId, levelId }) {
+    apiThemeDelete({ themeId, levelId }) {
       themeDel({ themeId, levelId }).then(() => {
-        this.apiLabelList()
+        this.apiThemeList()
         this.$message.success(`删除成功`)
       })
     },

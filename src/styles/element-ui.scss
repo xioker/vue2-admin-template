@@ -53,8 +53,13 @@
   position: relative;
   margin: 0 auto;
 }
-.el-dialog__header{
+
+.el-dialog__header,
+.el-drawer__header{
   border-bottom: 1px solid #ebebeb;
+}
+.el-drawer__header{
+  padding-bottom: 10px;
 }
 
 .el-table thead{

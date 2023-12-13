@@ -65,6 +65,14 @@ export function bookTypeDelete(params) {
     params
   })
 }
+// 小说二级分类关联标签
+export function bookTypeAddLabel(params) {
+  return request({
+    url: '/book-type/type_add_label',
+    method: 'get',
+    params
+  })
+}
 
 // 小说章节列表
 export function sectionList(data) {
@@ -91,7 +99,7 @@ export function sectionSave(data) {
   })
 }
 // 小说章节删除
-export function sectionOper(params) {
+export function sectionDelete(params) {
   return request({
     url: '/book-section/bookSection_delete',
     method: 'get',
@@ -177,6 +185,23 @@ export function labelDelete(params) {
   return request({
     url: '/book-label/bookLabel_delete',
     method: 'get',
+    params
+  })
+}
+
+// 订单列表
+export function orderList(data) {
+  return request({
+    url: '/member-order/search',
+    method: 'post',
+    data
+  })
+}
+// 订单删除
+export function orderDel(params) {
+  return request({
+    url: '/member-order/order_del',
+    method: 'post',
     params
   })
 }

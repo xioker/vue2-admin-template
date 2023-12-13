@@ -11,7 +11,7 @@
         <el-tag :type="row.sendStatus && row.sendStatus == 1 ? 'success' : 'danger'">{{ row.sendStatus && row.sendStatus == 1 ? '已发送' : '未发送' }}</el-tag>
       </template>
       <template #action="{row}">
-        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiMailDetail(row)">编辑</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiMailDetail(row)" :disabled="row.sendStatus == 1">编辑</el-button>
         <el-popconfirm @onConfirm="onStatus(row)" :title="`确定发送吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="success" :disabled="row.sendStatus == 1">发送</el-button>
         </el-popconfirm>
@@ -20,6 +20,7 @@
         </el-popconfirm>
       </template>
     </MyTable>
+    <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
       <el-form ref="mail" :model="mailForm" label-position="right" label-width="80px">
@@ -46,13 +47,14 @@
 </template>
 <script>
 import { mailList, mailDel, mailSave, mailSend } from '@/api/user'
-import MyTable from '@/components/MyTable/index.vue'
 export default {
-  components: {
-    MyTable
-  },
   data() {
     return {
+      searchForm: {
+        pageNo: 1,
+        pageSize: 20,
+      },
+      total: 0,
       // 表格数据
       tableList: [],
       // 表格loading
@@ -84,10 +86,16 @@ export default {
   methods: {
     // 列表接口
     apiMailList(){
-      mailList({pageNo:1, pageSize: 20}).then(res => {
+      mailList(this.searchForm).then(res => {
         this.tableList = res.list || []
+        this.total = Number(res.total) || 0
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
+    },
+    onPagination({page, limit}){
+      this.searchForm.pageNo = page
+      this.searchForm.pageSize = limit
+      this.apiMailList()
     },
     // 新增
     onAdd(){

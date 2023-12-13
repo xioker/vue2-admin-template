@@ -67,10 +67,8 @@
 <script>
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
-import TransactionTable from './components/TransactionTable'
 import BoxCard from './components/BoxCard'
 import Wapper from './components/Wapper'
 import CardItem from './components/CardItem'
@@ -99,10 +97,8 @@ export default {
   components: {
     PanelGroup,
     LineChart,
-    RaddarChart,
     PieChart,
     BarChart,
-    TransactionTable,
     BoxCard,
     Wapper,
     CardItem

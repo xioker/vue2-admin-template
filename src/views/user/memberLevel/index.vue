@@ -54,11 +54,7 @@
 </template>
 <script>
 import { levelList, levelDel, levelDetail, levelSave } from '@/api/user'
-import MyTable from '@/components/MyTable/index.vue'
 export default {
-  components: {
-    MyTable
-  },
   data() {
     return {
       // 表格数据

@@ -14,6 +14,7 @@
         </el-popconfirm>
       </template>
     </MyTable>
+    <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
       <el-form ref="event" :model="eventForm" label-position="right" label-width="80px">
@@ -42,13 +43,14 @@
 </template>
 <script>
 import { eventList, eventSave, eventDel } from '@/api/user'
-import MyTable from '@/components/MyTable/index.vue'
 export default {
-  components: {
-    MyTable
-  },
   data() {
     return {
+      searchForm: {
+        pageNo: 1,
+        pageSize: 20
+      },
+      total: 0,
       // 表格数据
       tableList: [],
       // 表格loading
@@ -84,10 +86,16 @@ export default {
   methods: {
     // 列表接口
     apiEventList(){
-      eventList({pageNo:1, pageSize: 20}).then(res => {
+      eventList(this.searchForm).then(res => {
         this.tableList = res.list || []
+        this.total = Number(res.total) || 0
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
+    },
+    onPagination({page, limit}){
+      this.searchForm.pageNo = page
+      this.searchForm.pageSize = limit
+      this.apiEventList()
     },
     // 新增
     onAdd(){
