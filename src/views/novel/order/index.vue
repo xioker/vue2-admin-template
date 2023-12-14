@@ -16,19 +16,17 @@
       <el-form-item>
         <el-button type="primary" @click.stop="apiOrderList">查询</el-button>
         <el-button type="info" @click.stop="onReset">重置</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
-      <template #isDel="{row}">
-        <el-tag :type="row.isDel && row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel && row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
+      <template #orderStatus="{row}">
+        <el-tag :type="['warning','success','danger'][row.orderStatus]">{{ ['未完成','已支付','已失效'][row.orderStatus] }}</el-tag>
       </template>
-      <template #meetType="{row}">
-        <span>{{ row.meetType == 1 ? '开通会员' : '阅读时长' }}</span>
+      <template #payType="{row}">
+        <el-tag type="info">{{ row.payType == 1 ? '微信' : '支付宝' }}</el-tag>
       </template>
       <template #action="{row}">
-        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiOrderDetail(row)">编辑</el-button>
-        <el-popconfirm @onConfirm="apiOrderDelete(row)" :title="`确定删除标签【${row.title}】吗`" style="margin-left:10px">
+        <el-popconfirm @onConfirm="apiOrderDelete(row)" :title="`确定删除订单【${row.orderNo}】吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="danger" icon="el-icon-delete">删除</el-button>
         </el-popconfirm>
       </template>
@@ -73,9 +71,13 @@ export default {
         {label: '用户昵称', prop: 'custName'},
         {label: '手机号码', prop: 'phone'},
         {label: '订单号', prop: 'orderNo'},
+        {label: '购买套餐名称', prop: 'packageName'},
+        {slot: 'orderStatus', label: '订单状态', prop: 'orderStatus'},
+        {slot: 'payType', label: '支付类型', prop: 'payType'},
+        {label: '支付金额', prop: 'payPrice'},
         {label: '订单金额', prop: 'orderPrice'},
-        // {label: '更新人', prop: 'updateId'},
-        {label: '更新时间', prop: 'updateTime'},
+        {label: '赠送书币', prop: 'gold'},
+        {label: '支付时间', prop: 'payTime'},
         {slot: 'action', label: '操作', prop: 'action'},
       ],
       // 修改新增弹框数据
@@ -98,11 +100,20 @@ export default {
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     onPagination({page, limit}){
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
+      this.apiOrderList()
+    },
+    // 重置
+    onReset(){
+      this.searchForm.orderNo = ''
+      this.searchForm.phone = ''
+      this.searchForm.orderStatus = ''
+      this.searchForm.createTimeStart = ''
+      this.searchForm.createTimeEnd = ''
       this.apiOrderList()
     },
     // 新增
@@ -113,11 +124,6 @@ export default {
         this.orderForm.labelId = ''
         this.orderForm.title = ''
       })
-    },
-    // 重置
-    onReset(){
-      this.searchForm.keyword = ''
-      this.apiOrderList()
     },
     onDialogCancle(){
       this.title === '新增' && this.$refs.label.clearValidate()
@@ -147,8 +153,8 @@ export default {
       // })
     },
     // 删除数据接口
-    apiOrderDelete({ labelId: bookLabelId }) {
-      labelDelete({ bookLabelId }).then(() => {
+    apiOrderDelete({ orderId }) {
+      orderDel({ orderId }).then(() => {
         this.apiOrderList()
         this.$message.success(`删除成功`)
       })

@@ -61,22 +61,46 @@ export function customerList(data) {
 }
 
 // 反馈删除
-export function customerDel(data) {
+export function customerDel(params) {
   return request({
     url: '/customer-provide/provide_del',
     method: 'post',
-    data
+    params
   })
 }
 // 反馈回复
-export function customerReply(data) {
+export function customerReply(params) {
   return request({
     url: '/customer-provide/replyProvide',
+    method: 'post',
+    params
+  })
+}
+// 会员费管理列表
+export function findMemberThali(data) {
+  return request({
+    url: '/memberThali/findMemberThali',
     method: 'post',
     data
   })
 }
-// 会员费管理列表
+// 删除套餐
+export function memberThaliDelete(params) {
+  return request({
+    url: '/memberThali/deleteMemberThali',
+    method: 'post',
+    params
+  })
+}
+// 套餐修改 保存
+export function memberThaliAdd(data) {
+  return request({
+    url: '/memberThali/add',
+    method: 'post',
+    data
+  })
+}
+
 // 站内信管理列表
 export function mailList(data) {
   return request({

@@ -12,18 +12,18 @@
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #bookState="{row}">
-        <el-tag :type="row.bookState == 0 ? 'success' : 'danger'">{{ ['更新','完结','停更'][row.bookState] }}</el-tag>
+        <el-tag size="mini" :type="row.bookState == 0 ? 'success' : 'danger'">{{ ['更新','完结','停更'][row.bookState] }}</el-tag>
       </template>
       <template #isTop="{row}">
-        <el-tag :type="row.isTop == 1 ? 'success' : 'danger'">{{ row.isTop == 1 ? '是' : '否' }}</el-tag>
+        <el-tag size="mini" :type="row.isTop == 1 ? 'success' : 'danger'">{{ row.isTop == 1 ? '是' : '否' }}</el-tag>
       </template>
       <template #chargeType="{row}">
-        <el-tag type="success">{{ ['完全免费','VIP免费','章节收费'][row.chargeType] }}</el-tag>
+        <el-tag size="mini" type="info">{{ ['完全免费','VIP免费','章节收费'][row.chargeType] }}</el-tag>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiLabelDetail(row)">编辑</el-button>
         <el-button size="mini" type="success" @click="$parent.changeCom(row)">小说章节</el-button>
-        <el-popconfirm @onConfirm="apiLabelDelete(row)" :title="`确定删除标签【${row.title}】吗`" style="margin-left:10px">
+        <el-popconfirm @onConfirm="apiLabelDelete(row)" :title="`确定删除小说【${row.bookTitle}】吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="danger" icon="el-icon-delete">删除</el-button>
         </el-popconfirm>
       </template>
@@ -91,7 +91,7 @@ export default {
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     onPagination({page, limit}){
       this.searchForm.pageNo = page

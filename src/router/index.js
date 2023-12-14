@@ -57,7 +57,7 @@ export const constantRoutes = [
     hidden: true
   },
   
-  // 菜单管理
+  // 权限管理
   {
     path: '/auth',
     component: Layout,
@@ -181,7 +181,7 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'SystemSetting',
+        path: 'systemSetting',
         component: () => import('@/views/systemSetting/index'),
         name: 'SystemSetting',
         meta: {

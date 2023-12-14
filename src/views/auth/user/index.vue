@@ -5,7 +5,7 @@
     </el-row>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #status="{row}">
-        <el-tag :type="row.status == 1 ? 'success' : 'danger'">{{ row.status == 1 ? '已启用' : '已禁用' }}</el-tag>
+        <el-tag size="mini" :type="row.status == 1 ? 'success' : 'danger'">{{ row.status == 1 ? '已启用' : '已禁用' }}</el-tag>
       </template>
       <template #action="{row}">
         <template v-if="row.roleName !== '超级管理员'">
@@ -18,6 +18,7 @@
         </template>
       </template>
     </MyTable>
+    <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
       <el-form ref="user" :model="userForm" label-position="right" label-width="50px">
@@ -65,6 +66,11 @@ import { userList, userDetail, userSave, userOper, userAddRole, roleList } from 
 export default {
   data() {
     return {
+      searchForm: {
+        pageNo: 1,
+        pageSize: 20
+      },
+      total: 0,
       // 表格数据
       tableList: [],
       // 表格loading
@@ -109,10 +115,17 @@ export default {
     },
     // 列表接口
     apiUserList(){
-      userList({pageNo:1, pageSize: 20}).then(res => {
+      if(this.searchForm.tableLoading === false) this.tableLoading = true
+      userList(this.searchForm).then(res => {
         this.tableList = res.list || []
+        this.total = Number(res.total) || 0
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
+    },
+    onPagination({page, limit}){
+      this.searchForm.pageNo = page
+      this.searchForm.pageSize = limit
+      this.apiUserList()
     },
     // 新增
     onAdd(){
@@ -137,7 +150,6 @@ export default {
           userSave(data).then(()=>{
             this.apiUserList()
             this.visible = false
-            this.$refs.user.resetFields()
             this.$message.success(`${this.title === '修改密码' ? '修改密码' : userId ? '编辑' :  '新增'}成功`)
           })
         }

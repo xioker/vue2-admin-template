@@ -14,10 +14,8 @@
   </el-card>
 </template>
 <script>
-import countTo from 'vue-count-to'
 import { sysConfigSave, findSysConfig } from '@/api/common'
 export default {
-  components: { countTo },
   data() {
     return {
       loading: true,

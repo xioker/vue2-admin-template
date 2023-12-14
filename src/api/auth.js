@@ -107,11 +107,11 @@ export function menuOper(data) {
   })
 }
 // 角色关联菜单
-export function roleAddMenu(data) {
+export function roleAddMenu(params) {
   return request({
     url: '/sys-menu/role_add_menu',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 // 用户关联角色

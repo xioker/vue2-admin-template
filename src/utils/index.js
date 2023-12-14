@@ -1,8 +1,4 @@
 /**
- * Created by PanJiaChen on 16/11/18.
- */
-
-/**
  * Parse the time to string
  * @param {(Object|string|number)} time
  * @param {string} cFormat
@@ -94,10 +90,7 @@ export function formatTime(time, option) {
   }
 }
 
-/**
- * @param {string} url
- * @returns {Object}
- */
+// 获取查询地址后数据 转对象
 export function getQueryObject(url) {
   url = url == null ? window.location.href : url
   const search = url.substring(url.lastIndexOf('?') + 1)
@@ -286,6 +279,30 @@ export function debounce(func, wait, immediate) {
   }
 }
 
+// 节流
+var timer, flag= false;
+export function throttle(func, wait = 500, immediate = true) {
+    if (immediate) {
+        if (!flag) {
+            flag = true;
+            // 如果适合立即执行，则在wait毫秒内开始执行
+            typeof func === 'function' && func()
+            timer = setTimeout(() => {
+                flag = false;
+            }, wait);
+        }
+    } else {
+        if (!flag) {
+            flag = true
+            // 如果是非立即执行，则在wait毫秒内的结束处执行
+            timer = setTimeout(() => {
+                flag = false;
+                typeof func === 'function' && func()
+            }, wait)
+        }
+    }
+}
+
 /**
  * This is just a simple version of deep copy
  * Has a lot of edge cases bug
@@ -354,4 +371,21 @@ export function removeClass(ele, cls) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
     ele.className = ele.className.replace(reg, ' ')
   }
+}
+
+// 整理树形菜单数据
+export function buildTree(data, idKey = 'menuId', parentKey = 'parentId', rootValue = '0') {
+  const tree = [];
+  const idMap = {};
+  data.forEach(item => {
+    idMap[item[idKey]] = { ...item, children: [] };
+  });
+  data.forEach(item => {
+    if (item[parentKey] !== rootValue) {
+      idMap[item[parentKey]].children.push(idMap[item[idKey]]);
+    } else {
+      tree.push(idMap[item[idKey]]);
+    }
+  });
+  return tree;
 }

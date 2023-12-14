@@ -5,10 +5,10 @@
     </el-row>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #isDel="{row}">
-        <el-tag :type="row.isDel && row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel && row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
+        <el-tag size="mini" :type="row.isDel && row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel && row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
       </template>
       <template #meetType="{row}">
-        <span>{{ row.meetType == 1 ? '开通会员' : '阅读时长' }}</span>
+        <el-tag type="info">{{ row.meetType == 1 ? '开通会员' : '阅读时长' }}</el-tag>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiLevelDetail(row)">编辑</el-button>
@@ -57,11 +57,16 @@ import { levelList, levelDel, levelDetail, levelSave } from '@/api/user'
 export default {
   data() {
     return {
+      searchForm: {
+        pageNo: 1,
+        pageSize: 20,
+      },
       // 表格数据
       tableList: [],
       // 表格loading
       tableLoading: true,
       columns: [
+        {label: '序号', prop: 'index'},
         {label: '等级名称', prop: 'levelName'},
         {label: '赠送金币', prop: 'gold'},
         {slot: 'isDel', label: '状态', prop: 'isDel'},
@@ -92,10 +97,11 @@ export default {
   methods: {
     // 列表接口
     apiLevelList(){
-      levelList({pageNo:1, pageSize: 20}).then(res => {
+      if(this.tableLoading === false) this.tableLoading = true
+      levelList(this.searchForm).then(res => {
         this.tableList = res || []
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     // 新增
     onAdd(){

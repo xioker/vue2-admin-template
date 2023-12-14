@@ -30,7 +30,6 @@
         :sortable="co.sortable || false"
         :fixed="co.fixed || false"
         :align="co.align || 'center'"
-        :show-overflow-tooltip="co.showOverflowTooltip || co.prop !='action'"
         :key="co.slot"
         v-else-if="co.slot"
       >

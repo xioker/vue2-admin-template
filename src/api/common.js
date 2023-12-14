@@ -1,12 +1,19 @@
 
 import request from '@/utils/request'
 // 文件上传
-export function upload(data) {
+ function upload(data) {
   return request({
     url: '/upload/upload',
     method: 'post',
     headers: { 'Content-Type': 'multipart/form-data' },
     data
+  })
+}
+export function uploadFile(data) {
+  return new Promise((resolve, reject) => {
+    upload(data).then((res) => {
+      resolve(res)
+    }).catch((err) => reject(err))
   })
 }
 

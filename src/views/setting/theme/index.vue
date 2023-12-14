@@ -8,17 +8,17 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click.stop="apiThemeList">查询</el-button>
-        <el-button type="info" @click.stop="onReset">重置</el-button>
+        <el-button type="primary" @click="apiThemeList">查询</el-button>
+        <el-button type="info" @click="onReset">重置</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #isDel="{row}">
-        <el-tag :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
+        <el-tag size="mini" :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
       </template>
       <template #isVip="{row}">
-        <el-tag :type="row.isVip == 1 ? 'success' : 'danger'">{{ row.isVip == 1 ? '是' : '否' }}</el-tag>
+        <el-tag size="mini" :type="row.isVip == 1 ? 'success' : 'danger'">{{ row.isVip == 1 ? '是' : '否' }}</el-tag>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiThemeDetail(row)">编辑</el-button>
@@ -41,7 +41,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="主题图片" prop="themeImg">
-          <el-input type="text" v-model="themeForm.themeImg" placeholder="请输入标题" autocomplete="off"></el-input>
+          <ImageUpload :url.sync="themeForm.themeImg" :params="{type: 1, module: 6 }"></ImageUpload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -52,8 +52,11 @@
   </div>
 </template>
 <script>
+import { throttle } from '@/utils/index'
+import ImageUpload from '@/components/Upload/ImageUpload.vue'
 import { themeList, themeDel, themeSave } from '@/api/setting'
 export default {
+  components: { ImageUpload },
   data() {
     return {
       // 搜索表单
@@ -68,6 +71,7 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
+        {label: '序号', prop: 'index'},
         {label: '主题名称', prop: 'themeName'},
         {label: '主题图片', prop: 'themeImg'},
         {slot: 'isDel', label: '状态', prop: 'isDel'},
@@ -99,7 +103,7 @@ export default {
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     onPagination({page, limit}){
       this.searchForm.pageNo = page

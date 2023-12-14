@@ -45,6 +45,10 @@ import { bannerList, bannerDetail, bannerSave, bannerDel, bannerSort } from '@/a
 export default {
   data() {
     return {
+      searchForm: {
+        pageNo: 1,
+        pageSize: 20,
+      },
       // 表格数据
       tableList: [],
       // 表格loading
@@ -76,10 +80,11 @@ export default {
   methods: {
     // 列表接口
     apiBannerList(){
-      bannerList({pageNo:1, pageSize: 20}).then(res => {
+      if(this.searchForm.tableLoading === false) this.tableLoading = true
+      bannerList(this.searchForm).then(res => {
         this.tableList = res.list || []
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     // 新增
     onAdd(){

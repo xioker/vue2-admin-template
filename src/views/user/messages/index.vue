@@ -1,14 +1,31 @@
 <template>
   <div>
-    <el-row style="margin-bottom: 10px;">
-      <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
-    </el-row>
+    <el-form inline>
+      <el-form-item label="发送状态">
+        <el-select v-model="searchForm.sendStatus" placeholder="请选择发送状态" >
+          <el-option label="待发送" :value="0"></el-option>
+          <el-option label="已发送" :value="1"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="发送类型">
+        <el-select v-model="searchForm.sendCustType" placeholder="请选择发送类型" >
+          <el-option label="全体" :value="0"></el-option>
+          <el-option label="会员" :value="1"></el-option>
+          <el-option label="普通用户" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click.stop="apiMailList">查询</el-button>
+        <el-button type="info" @click.stop="onReset">重置</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
+      </el-form-item>
+    </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #sendCustType="{row}">
-        <span>{{ ['全体','会员','普通用户'][row.sendCustType] }}</span>
+        <el-tag type="info">{{ ['全体','会员','普通用户'][row.sendCustType] }}</el-tag>
       </template>
       <template #sendStatus="{row}">
-        <el-tag :type="row.sendStatus && row.sendStatus == 1 ? 'success' : 'danger'">{{ row.sendStatus && row.sendStatus == 1 ? '已发送' : '未发送' }}</el-tag>
+        <el-tag size="mini" :type="row.sendStatus && row.sendStatus == 1 ? 'success' : 'danger'">{{ row.sendStatus && row.sendStatus == 1 ? '已发送' : '未发送' }}</el-tag>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiMailDetail(row)" :disabled="row.sendStatus == 1">编辑</el-button>
@@ -30,8 +47,8 @@
         <el-form-item label="内容" prop="content" :rules="[{trigger:'blur',message: '内容不能为空',required: true}]">
           <el-input type="textarea" v-model="mailForm.content" placeholder="请输入内容" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="发送对象" prop="sendCustType" :rules="[{trigger:'blur',message: '发送对象不能为空',required: true}]">
-          <el-select v-model="mailForm.sendCustType" placeholder="请选择发送对象" style="width:100%">
+        <el-form-item label="发送类型" prop="sendCustType" :rules="[{trigger:'blur',message: '发送类型不能为空',required: true}]">
+          <el-select v-model="mailForm.sendCustType" placeholder="请选择发送类型" style="width:100%">
             <el-option label="全体" :value="0">全体</el-option>
             <el-option label="会员" :value="1">会员</el-option>
             <el-option label="普通用户" :value="2">普通用户</el-option>
@@ -53,6 +70,10 @@ export default {
       searchForm: {
         pageNo: 1,
         pageSize: 20,
+        sendStatus: '',
+        sendCustType: '',
+        createTimeStart: '',
+        createTimeEnd: ''
       },
       total: 0,
       // 表格数据
@@ -60,12 +81,13 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
+        {label: '序号', prop: 'index'},
         {label: '标题', prop: 'titile'},
         {label: '内容', prop: 'content'},
         {label: '创建人', prop: 'createName'},
         {label: '创建时间', prop: 'createTime'},
-        {slot: 'sendCustType',label: '发送对象', prop: 'sendCustType'},
         {slot: 'sendStatus',label: '发送状态', prop: 'sendStatus'},
+        {slot: 'sendCustType',label: '发送类型', prop: 'sendCustType'},
         {label: '发送时间', prop: 'sendTime'},
         {slot: 'action', label: '操作', prop: 'action', fixed: 'right', width:'300'},
       ],
@@ -86,15 +108,23 @@ export default {
   methods: {
     // 列表接口
     apiMailList(){
+      if(this.tableLoading === false) this.tableLoading = true
       mailList(this.searchForm).then(res => {
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     onPagination({page, limit}){
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
+      this.apiMailList()
+    },
+    onReset(){
+      this.searchForm.sendCustType = ''
+      this.searchForm.sendStatus = ''
+      this.searchForm.createTimeStart = ''
+      this.searchForm.createTimeEnd = ''
       this.apiMailList()
     },
     // 新增

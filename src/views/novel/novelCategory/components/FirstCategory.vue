@@ -83,11 +83,12 @@ export default {
   methods: {
     // 列表接口
     apiBookTypeList(){
+      if(this.searchForm.tableLoading === false) this.tableLoading = true
       bookBigTypeList(this.searchForm).then(res => {
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     onPagination({page, limit}){
       this.searchForm.pageNo = page

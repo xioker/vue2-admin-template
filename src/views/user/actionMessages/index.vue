@@ -1,11 +1,18 @@
 <template>
   <div>
-    <el-row style="margin-bottom: 10px;">
-      <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
-    </el-row>
+    <el-form inline>
+      <el-form-item label="内容">
+        <el-input v-model="searchForm.content" type="text" placeholder="请输入内容"/>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click.stop="apiEventList">查询</el-button>
+        <el-button type="info" @click.stop="onReset">重置</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
+      </el-form-item>
+    </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #isDel="{row}">
-        <el-tag :type="row.isDel == 0 ? 'success' : 'danger'">{{ row.isDel == 0 ? '已启用' : '已禁用' }}</el-tag>
+        <el-tag size="mini" :type="row.isDel == 0 ? 'success' : 'danger'">{{ row.isDel == 0 ? '已启用' : '已禁用' }}</el-tag>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiEventDetail(row)">编辑</el-button>
@@ -48,7 +55,8 @@ export default {
     return {
       searchForm: {
         pageNo: 1,
-        pageSize: 20
+        pageSize: 20,
+        content: '',
       },
       total: 0,
       // 表格数据
@@ -56,9 +64,10 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
+        {label: '序号', prop: 'index'},
         {label: '活动名称', prop: 'eventName'},
         {label: '活动内容', prop: 'eventContent'},
-        {slot: 'isDel', label: '状态', prop: 'isDel'},
+        // {slot: 'isDel', label: '状态', prop: 'isDel'},
         {label: '关联链接', prop: 'eventUrl'},
         {label: '开始时间', prop: 'eventStartTime'},
         {label: '结束时间', prop: 'eventEndTime'},
@@ -86,15 +95,20 @@ export default {
   methods: {
     // 列表接口
     apiEventList(){
+      if(this.tableLoading === false) this.tableLoading = true
       eventList(this.searchForm).then(res => {
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
         this.tableLoading = false
-      }).catch(()=>this.tableLoading = false)
+      }).finally(()=>this.tableLoading = false)
     },
     onPagination({page, limit}){
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
+      this.apiEventList()
+    },
+    onReset(){
+      this.searchForm.content = ''
       this.apiEventList()
     },
     // 新增

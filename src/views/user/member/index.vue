@@ -19,16 +19,16 @@
         <el-image :src="row.headUrl || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;"></el-image>
       </template>
       <template #source="{row}">
-        <span>{{ ['APP','PC','微信'][row.source] }}</span>
+        <el-tag type="info">{{ ['APP','PC','微信'][row.source] }}</el-tag>
       </template>
       <template #isDel="{row}">
-        <el-tag :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
+        <el-tag size="mini" :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
       </template>
       <template #sex="{row}">
         <span>{{ row.sex == 1 ? '男' : '女' }}</span>
       </template>
       <template #isVip="{row}">
-        <el-tag :type="row.isVip == 1 ? 'success' : 'danger'">{{ row.isVip == 1 ? '是' : '否' }}</el-tag>
+        <el-tag size="mini" :type="row.isVip == 1 ? 'success' : 'danger'">{{ row.isVip == 1 ? '是' : '否' }}</el-tag>
       </template>
       <template #action="{row}">
         <template>
@@ -46,6 +46,10 @@ import { customer, opCustomer } from '@/api/user'
 export default {
   data(){
     return {
+      searchForm: {
+        pageNo: 1,
+        pageSize: 20,
+      },
       total: 0,
       // 表格数据
       tableList: [],
@@ -74,11 +78,10 @@ export default {
   methods: {
     apiCustomer(){
       if(this.tableLoading === false) this.tableLoading = true
-      customer({pageNo: 1, pageSize: 20}).then((res)=>{
+      customer(this.searchForm).then((res)=>{
         this.tableList = res.list || []
-        this.total = res.total
-        this.tableLoading = false
-      })
+        this.total = Number(res.total) || 0
+      }).finally(() =>this.tableLoading = false)
     },
   }
 }
