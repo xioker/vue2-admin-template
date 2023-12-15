@@ -62,7 +62,7 @@
   </div>
 </template>
 <script>
-import { userList, userDetail, userSave, userOper, userAddRole, roleList } from '@/api/auth'
+import { userList, userDetail, userSave, userOper, userAddRole, roleList, findUserRole } from '@/api/auth'
 export default {
   data() {
     return {
@@ -171,6 +171,9 @@ export default {
       this.roleVisible = false
     },
     onRole({ userId }){
+      // findUserRole({ userId }).then((res) => {
+      //   this.roleId = res
+      // })
       this.userId = userId
       this.roleVisible = true
     },
