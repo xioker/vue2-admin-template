@@ -16,7 +16,11 @@
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #headUrl="{row}">
-        <el-image :src="row.headUrl || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;"></el-image>
+        <el-image :src="row.headUrl || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+          <div slot="error" class="flex-c-c img-err">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
       </template>
       <template #source="{row}">
         <el-tag type="info">{{ ['APP','PC','微信'][row.source] }}</el-tag>

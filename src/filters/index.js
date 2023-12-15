@@ -66,3 +66,12 @@ export function toThousandFilter(num) {
 export function uppercaseFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+// imgae url
+export function imageUrl(url) {
+  if(url && url.indexOf('http') != -1){
+    return url
+  }else{
+    return url  ?  `${process.env.VUE_APP_IMAGE_URL}${url}` : ''
+  }
+}

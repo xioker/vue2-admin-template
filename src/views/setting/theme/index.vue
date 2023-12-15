@@ -41,7 +41,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="主题图片" prop="themeImg">
-          <ImageUpload :url.sync="themeForm.themeImg" :params="{type: 1, module: 6 }"></ImageUpload>
+          <ImageUpload ref="up" :url.sync="themeForm.themeImg" :params="{type: 1, module: 6 }"></ImageUpload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

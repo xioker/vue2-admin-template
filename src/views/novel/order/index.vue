@@ -19,6 +19,13 @@
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+      <template #custHead="{row}">
+        <el-image :src="row.custHead || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+          <div slot="error" class="flex-c-c img-err">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
+      </template>
       <template #orderStatus="{row}">
         <el-tag :type="['warning','success','danger'][row.orderStatus]">{{ ['未完成','已支付','已失效'][row.orderStatus] }}</el-tag>
       </template>
@@ -67,7 +74,7 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
-        {label: '头像', prop: 'custHead'},
+        {slot: 'cusHead', label: '头像', prop: 'custHead'},
         {label: '用户昵称', prop: 'custName'},
         {label: '手机号码', prop: 'phone'},
         {label: '订单号', prop: 'orderNo'},
