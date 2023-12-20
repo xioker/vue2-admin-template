@@ -14,6 +14,13 @@
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+      <template #themeImg="{row}">
+        <el-image :preview-src-list="[row.themeImg]" :src="row.themeImg || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+          <div slot="error" class="flex-c-c img-err">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
+      </template>
       <template #isDel="{row}">
         <el-tag size="mini" :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
       </template>
@@ -73,7 +80,7 @@ export default {
       columns: [
         {label: '序号', prop: 'index'},
         {label: '主题名称', prop: 'themeName'},
-        {label: '主题图片', prop: 'themeImg'},
+        {slot: 'themeImg', label: '主题图片', prop: 'themeImg'},
         {slot: 'isDel', label: '状态', prop: 'isDel'},
         {slot: 'isVip', label: 'VIP专属', prop: 'isVip'},
         {label: '创建人', prop: 'createName'},

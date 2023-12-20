@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/index'
-import { userDetail } from '@/api/auth'
+import { userDetail, findUserMenu } from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -9,7 +9,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: ['Admin'],
-  userInfo: null
+  userInfo: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : ''
 }
 
 const mutations = {
@@ -31,6 +31,7 @@ const mutations = {
   },
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
+    localStorage.setItem('userInfo',JSON.stringify(userInfo))
   }
 }
 
@@ -58,13 +59,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       userDetail({userId:state.userInfo.userId}).then(response => {
         const { userName, userId } = response
-
         if (!data) {
           reject('Verification failed, please Login again.')
         }
 
         const { roles, name, avatar, introduction } = data
-
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -85,12 +84,12 @@ const actions = {
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
+      commit('SET_USERINFO', null)
+      commit('SET_NAME', null)
       removeToken()
       resetRouter()
 
-      // reset visited views and cached views
-      // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+      // reset visited views and cached views to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
       dispatch('tagsView/delAllViews', null, { root: true })
       resolve()
     })

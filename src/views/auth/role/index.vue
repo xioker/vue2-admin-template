@@ -94,7 +94,7 @@ export default {
         {label: '创建时间', prop: 'createTime'},
         // {label: '更新人', prop: 'updateId'},
         {label: '更新时间', prop: 'updateTime'},
-        {slot: 'action', label: '操作', prop: 'action'},
+        {slot: 'action', label: '操作', prop: 'action', fixed: 'right', width: '220'},
       ],
       // 修改新增弹框数据
       title: '新增',

@@ -1,10 +1,10 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import { userDetail, findUserMenu } from '@/api/auth'
+import store from '@/store'
+import { buildTree, capitalize } from '@/utils'
+import Layout from '@/layout'
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
+
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
@@ -18,20 +18,33 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes, roles = []) {
   const res = []
 
   routes.forEach(route => {
-    const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
-      res.push(tmp)
+    const { component, path, perms, menuName, icon, children } = route
+    let tmpRoute = { 
+      component,
+      path,
+      children,
+      name: path.includes('/') ? capitalize(path.replace('/', '')) : capitalize(path),
+      meta: { title: menuName, icon: icon, roles: perms || [] }
     }
+    
+    // 构造路由结构数据
+    if (tmpRoute.component?.toString() === "Layout") {
+      tmpRoute.component = Layout;
+      tmpRoute.redirect = 'noRedirect'
+      if(tmpRoute.children&&tmpRoute.children.length>0){
+        tmpRoute.children = filterAsyncRoutes(tmpRoute.children)
+      }
+    }else{
+      tmpRoute.component = () => import(`@/views/${tmpRoute.component}/index.vue`);
+    }
+    res.push(tmpRoute);
   })
-
-  return res
+  // 404页面放在最后面
+  return res.push({ path: '*', redirect: '/404', hidden: true })
 }
 
 const state = {
@@ -49,8 +62,14 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
+    console.log(store.getters)
     return new Promise(resolve => {
       let accessedRoutes
+      // findUserMenu({userId: store.getters.userInfo ? store.getters.userInfo.userId : ''}).then((res) => {
+      //    let tree = res ? buildTree(res) : []
+      //    let x = filterAsyncRoutes(tree)
+      //    console.log(tree,x)
+      // }).finally(()=>{})
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
       } else {

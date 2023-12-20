@@ -16,7 +16,7 @@
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #headUrl="{row}">
-        <el-image :src="row.headUrl || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+        <el-image :preview-src-list="[row.headUrl]" :src="row.headUrl || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
           <div slot="error" class="flex-c-c img-err">
             <i class="el-icon-picture-outline"></i>
           </div>

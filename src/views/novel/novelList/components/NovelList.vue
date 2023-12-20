@@ -5,7 +5,7 @@
         <el-input type="text" v-model="searchForm.keyword" placeholder="请输入标题" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click.stop="apiLabelList">查询</el-button>
+        <el-button type="primary" @click.stop="apiNovelList">查询</el-button>
         <el-button type="info" @click.stop="onReset">重置</el-button>
         <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
       </el-form-item>
@@ -21,9 +21,9 @@
         <el-tag size="mini" type="info">{{ ['完全免费','VIP免费','章节收费'][row.chargeType] }}</el-tag>
       </template>
       <template #action="{row}">
-        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiLabelDetail(row)">编辑</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiNovelDetail(row)">编辑</el-button>
         <el-button size="mini" type="success" @click="$parent.changeCom(row)">小说章节</el-button>
-        <el-popconfirm @onConfirm="apiLabelDelete(row)" :title="`确定删除小说【${row.bookTitle}】吗`" style="margin-left:10px">
+        <el-popconfirm @onConfirm="apiNovelDelete(row)" :title="`确定删除小说【${row.bookTitle}】吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="danger" icon="el-icon-delete">删除</el-button>
         </el-popconfirm>
       </template>
@@ -31,9 +31,44 @@
     <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
-      <el-form ref="label" :model="labelForm" label-position="right" label-width="60px">
-        <el-form-item label="标题" prop="title" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
-          <el-input type="text" v-model="labelForm.title" placeholder="请输入标题" autocomplete="off"></el-input>
+      <el-form ref="novel" :model="novelForm" label-position="right" label-width="80px">
+        <el-form-item label="标题" prop="bookTitle" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
+          <el-input type="text" v-model="novelForm.bookTitle" placeholder="请输入标题" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="价格" prop="bookPrice" :rules="[{trigger:'blur',message: '价格不能为空',required: true}]">
+          <el-input type="text" v-model="novelForm.bookPrice" placeholder="请输入价格" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="排序" prop="sortNum">
+          <el-input type="text" v-model="novelForm.sortNum" placeholder="请输入排序" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="字数" prop="wordCount">
+          <el-input type="text" v-model="novelForm.wordCount" placeholder="请输入字数" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="简介">
+          <el-input type="textarea" v-model="novelForm.bookTitle" placeholder="请输入标题" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="封面">
+          <el-input type="textarea" v-model="novelForm.bookCover" placeholder="请输入标题" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="是否置顶" prop="isTop">
+          <el-radio-group v-model="novelForm.isTop">
+            <el-radio :label="0">否</el-radio>
+            <el-radio :label="1">是</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="状态" prop="bookState">
+          <el-radio-group v-model="novelForm.bookState">
+            <el-radio :label="0">更新</el-radio>
+            <el-radio :label="1">完结</el-radio>
+            <el-radio :label="2">停更</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="付费类型" prop="chargeType">
+          <el-radio-group v-model="novelForm.chargeType">
+            <el-radio :label="0">完全免费</el-radio>
+            <el-radio :label="1">VIP免费</el-radio>
+            <el-radio :label="2">章节收费</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -74,18 +109,28 @@ export default {
       // 修改新增弹框数据
       title: '新增',
       visible: false,
-      labelForm: {
-        labelId: '',
-        title: '',
+      novelForm: {
+        authorId: '',
+        typeId: '',
+        bookTitle: '',
+        bookPrice: '',
+        sortNum: 0,
+        wordCount: '',
+        bookDesc: '',
+        bookState: 0,
+        chargeType: 0,
+        isTop: 0,
+        isShow: 0,
+        bookCover: '',
       }
     }
   },
   created() {
-    this.apiLabelList()
+    this.apiNovelList()
   },
   methods: {
     // 列表接口
-    apiLabelList(){
+    apiNovelList(){
       if(this.tableLoading === false) this.tableLoading = true
       bookFind(this.searchForm).then(res => {
         this.tableList = res.list || []
@@ -96,53 +141,71 @@ export default {
     onPagination({page, limit}){
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
-      this.apiLabelList()
+      this.apiNovelList()
     },
     // 新增
     onAdd(){
       this.title = '新增'
       this.visible = true
       this.$nextTick(()=>{
-        this.labelForm.labelId = ''
-        this.labelForm.title = ''
+        this.novelForm.authorId = ''
+        this.novelForm.bookTitle = ''
+        this.novelForm.bookPrice = ''
+        this.novelForm.bookCover = ''
+        this.novelForm.bookDesc = ''
+        this.novelForm.sortNum = 0
+        this.novelForm.wordCount = ''
+        this.novelForm.bookState = 0
+        this.novelForm.chargeType = 0
+        this.novelForm.isTop = 0
+        this.novelForm.isShow = 0
       })
     },
     // 重置
     onReset(){
       this.searchForm.keyword = ''
-      this.apiLabelList()
+      this.apiNovelList()
     },
     onDialogCancle(){
-      this.title === '新增' && this.$refs.label.clearValidate()
+      this.title === '新增' && this.$refs.novel.clearValidate()
       this.visible = false
     },
     onDialogSure(){
-      this.$refs.label.validate((valid) => {
+      this.$refs.novel.validate((valid) => {
         if(valid){
-          const { labelId } = this.labelForm
-          bookSave(this.labelForm).then(()=>{
-            this.apiLabelList()
+          const { authorId } = this.novelForm
+          bookSave(this.novelForm).then(()=>{
+            this.apiNovelList()
             this.visible = false
-            this.$refs.label.resetFields()
-            this.$message.success(`${labelId ? '编辑' : '新增'}成功`)
+            this.$refs.novel.resetFields()
+            this.$message.success(`${authorId ? '编辑' : '新增'}成功`)
           })
         }
       })
     },
     // 详情数据接口
-    apiLabelDetail({ labelId, title }) {
+    apiNovelDetail({ bookTitle, bookPrice, bookCover, bookDesc, sortNum, authorId, wordCount, bookState, chargeType, isTop, isShow}) {
       this.title = '编辑'
-      this.labelForm.labelId = labelId
-      this.labelForm.title = title
+      this.novelForm.authorId = authorId
+      this.novelForm.bookTitle = bookTitle
+      this.novelForm.bookPrice = bookPrice
+      this.novelForm.bookCover = bookCover
+      this.novelForm.bookDesc = bookDesc
+      this.novelForm.sortNum = Number(sortNum || 0)
+      this.novelForm.wordCount = wordCount
+      this.novelForm.bookState = Number(bookState || 0)
+      this.novelForm.chargeType = Number(chargeType || 0)
+      this.novelForm.isTop = Number(isTop || 0)
+      this.novelForm.isShow = Number(isShow || 0)
       this.visible = true
       // userDetail({userId}).then(res => {
       //   console.log(res)
       // })
     },
     // 删除数据接口
-    apiLabelDelete({ labelId: bookLabelId }) {
+    apiNovelDelete({ labelId: bookLabelId }) {
       labelDelete({ bookLabelId }).then(() => {
-        this.apiLabelList()
+        this.apiNovelList()
         this.$message.success(`删除成功`)
       })
     },

@@ -56,7 +56,7 @@ export default {
     columns: {
       type: Array,
       default: () => [
-        { prop: '', label: '封面' },{ prop: '', label: '书名' },{ prop: '', label: '浏览量' }
+        { prop: 'a', label: '封面' },{ prop: 'b', label: '书名' },{ prop: 'c', label: '浏览量' }
       ]
     }
   },

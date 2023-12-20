@@ -47,7 +47,7 @@
     <el-row :gutter="20">
       <el-col :span="8">
         <Wapper>
-          <template #title>佣金收入排行</template><box-card :columns="[{ prop: '', label: '头像' },{ prop: '', label: '昵称' },{ prop: '', label: '佣金收入' }]" />
+          <template #title>佣金收入排行</template><box-card :columns="[{ prop: 'q', label: '头像' },{ prop: 'w', label: '昵称' },{ prop: 'e', label: '佣金收入' }]" />
         </Wapper>
       </el-col>
       <el-col :span="8">

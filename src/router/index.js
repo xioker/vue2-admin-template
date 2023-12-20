@@ -2,12 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-
-/* Layout */
 import Layout from '@/layout'
-
-/* Router Modules */
-import componentsRouter from './modules/components'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -29,7 +24,7 @@ import componentsRouter from './modules/components'
   }
  */
 
-
+// 静态路由
 export const constantRoutes = [
   // 登录
   {
@@ -51,6 +46,7 @@ export const constantRoutes = [
       }
     ]
   },
+  // 404
   {
     path: '/404',
     component: () => import('@/views/error-page/404'),
@@ -62,12 +58,12 @@ export const constantRoutes = [
     path: '/auth',
     component: Layout,
     redirect: 'noRedirect',
-    alwaysShow: true, // will always show the root menu
+    alwaysShow: true, 
     name: 'Auth',
     meta: {
       title: '权限管理',
       icon: 'el-icon-menu',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin', 'editor'] 
     },
     children: [
       {
@@ -97,7 +93,55 @@ export const constantRoutes = [
       },
     ]
   },
-  componentsRouter,
+  // 用户管理
+  {
+    path: '/user',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'User',
+    meta: {
+      title: '用户管理',
+      icon: 'el-icon-user'
+    },
+    children: [
+      {
+        path: 'member',
+        component: () => import('@/views/user/member/index'),
+        name: 'Member',
+        meta: { title: '会员列表' }
+      },
+      {
+        path: 'memberLevel',
+        component: () => import('@/views/user/memberLevel/index'),
+        name: 'MemberLevel',
+        meta: { title: '会员等级' }
+      },
+      {
+        path: 'userFreeback',
+        component: () => import('@/views/user/userFreeback/index'),
+        name: 'UserFreeback',
+        meta: { title: '用户反馈' }
+      },
+      {
+        path: 'messages',
+        component: () => import('@/views/user/messages/index'),
+        name: 'Messages',
+        meta: { title: '站内信息' }
+      },
+      {
+        path: 'actionMessages',
+        component: () => import('@/views/user/actionMessages/index'),
+        name: 'ActionMessages',
+        meta: { title: '活动消息' }
+      },
+      {
+        path: 'memberMoney',
+        component: () => import('@/views/user/memberMoney/index'),
+        name: 'MemberMoney',
+        meta: { title: '会员费管理' }
+      }
+    ]
+  },
   // 小说管理
   {
     path: '/novel',
@@ -195,16 +239,14 @@ export const constantRoutes = [
 ]
 
 
-export const asyncRoutes = [
-  
-]
+// 动态路由
+export const asyncRoutes = []
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
-
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465

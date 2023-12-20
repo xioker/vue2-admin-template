@@ -41,7 +41,7 @@
       </div>
     </el-dialog>
     <!-- 角色配置 -->
-    <el-dialog destroy-on-close append-to-body title="角色配置" :visible.sync="roleVisible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onRoleCancle">
+    <el-dialog destroy-on-close append-to-body title="角色配置" :visible.sync="roleVisible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px">
       <el-form ref="roles" label-position="right" label-width="50px">
         <el-form-item label="角色" >
           <el-select multiple clearable v-model="roleId" placeholder="请选择角色" style="width:100%">
@@ -55,7 +55,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="onRoleCancle">取 消</el-button>
+        <el-button @click="roleVisible = false">取 消</el-button>
         <el-button type="primary" @click="apiUserAddRole">确 定</el-button>
       </div>
     </el-dialog>
@@ -165,17 +165,14 @@ export default {
         this.$message.success(`角色配置成功`)
       })
     },
-    onRoleCancle(){
-      this.userId = null
-      this.roleId.length = 0
-      this.roleVisible = false
-    },
     onRole({ userId }){
-      // findUserRole({ userId }).then((res) => {
-      //   this.roleId = res
-      // })
-      this.userId = userId
-      this.roleVisible = true
+      findUserRole({ userId }).then((res) => {
+        this.roleId = res && res.map((item) => item.roleId)
+      }).catch(()=>{this.roleId.length = 0})
+      .finally(()=>{
+        this.userId = userId
+        this.roleVisible = true
+      })
     },
     // 详情数据接口
     apiUserDetail({userId, password, status, userName }, type) {

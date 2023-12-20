@@ -8,11 +8,11 @@
         <img class="pic-404__child right" src="@/assets/404_images/404_cloud.png" alt="404">
       </div>
       <div class="bullshit">
-        <div class="bullshit__oops">OOPS!</div>
+        <!-- <div class="bullshit__oops">OOPS!</div>
         <div class="bullshit__info">All rights reserved
           <a style="color:#20a0ff" href="https://wallstreetcn.com" target="_blank">wallstreetcn</a>
-        </div>
-        <div class="bullshit__headline">{{ message }}</div>
+        </div> -->
+        <!-- <div class="bullshit__headline">{{ message }}</div> -->
         <div class="bullshit__info">访问页面不存在</div>
         <a href="" class="bullshit__return-home">返回首页</a>
       </div>
@@ -159,7 +159,7 @@ export default {
     position: relative;
     float: left;
     width: 300px;
-    padding: 30px 0;
+    padding: 130px 0;
     overflow: hidden;
     &__oops {
       font-size: 32px;

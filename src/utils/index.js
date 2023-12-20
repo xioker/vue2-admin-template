@@ -382,10 +382,16 @@ export function buildTree(data, idKey = 'menuId', parentKey = 'parentId', rootVa
   });
   data.forEach(item => {
     if (item[parentKey] !== rootValue) {
-      idMap[item[parentKey]].children.push(idMap[item[idKey]]);
+      idMap[item[parentKey]]?.children.push(idMap[item[idKey]]);
     } else {
       tree.push(idMap[item[idKey]]);
     }
   });
   return tree;
+}
+
+// 首字母大写
+export function capitalize(str) {
+  if(!str) return ''
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
