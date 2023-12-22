@@ -11,6 +11,13 @@
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+      <template #eventImg="{row}">
+        <el-image :preview-src-list="[row.eventImg]" :src="row.eventImg || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+          <div slot="error" class="flex-c-c img-err">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
+      </template>
       <template #isDel="{row}">
         <el-tag size="mini" :type="row.isDel == 0 ? 'success' : 'danger'">{{ row.isDel == 0 ? '已启用' : '已禁用' }}</el-tag>
       </template>
@@ -40,6 +47,9 @@
         <el-form-item label="关联链接" prop="eventUrl">
           <el-input type="text" v-model="eventForm.eventUrl" placeholder="请输入关联链接" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="图片" prop="eventImg">
+          <ImageUpload ref="up" :url.sync="eventForm.eventImg" :params="{type: 1, module: 5 }"></ImageUpload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="onDialogCancle">取 消</el-button>
@@ -49,8 +59,10 @@
   </div>
 </template>
 <script>
+import ImageUpload from '@/components/Upload/ImageUpload.vue'
 import { eventList, eventSave, eventDel } from '@/api/user'
 export default {
+  components: { ImageUpload },
   data() {
     return {
       searchForm: {
@@ -66,6 +78,7 @@ export default {
       columns: [
         {label: '序号', prop: 'index'},
         {label: '活动名称', prop: 'eventName'},
+        {slot: 'eventImg', label: '图片', prop: 'eventImg'},
         {label: '活动内容', prop: 'eventContent'},
         // {slot: 'isDel', label: '状态', prop: 'isDel'},
         {label: '关联链接', prop: 'eventUrl'},
@@ -73,7 +86,7 @@ export default {
         {label: '结束时间', prop: 'eventEndTime'},
         {label: '创建人', prop: 'createName'},
         {label: '创建时间', prop: 'createTime'},
-        {slot: 'action', label: '操作', prop: 'action'},
+        {slot: 'action', label: '操作', prop: 'action', width: '180'},
       ],
       // 修改新增弹框数据
       title: '新增',
@@ -151,6 +164,7 @@ export default {
       this.eventForm.eventStartTime = eventStartTime
       this.eventForm.eventEndTime = eventEndTime
       this.eventForm.eventUrl = eventUrl
+      this.eventForm.eventImg = eventImg
       this.visible = true
       // userDetail({userId}).then(res => {
       //   console.log(res)

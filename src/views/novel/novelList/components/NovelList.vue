@@ -1,8 +1,20 @@
 <template>
   <div>
     <el-form inline>
-      <el-form-item label="标题" prop="keyword">
-        <el-input type="text" v-model="searchForm.keyword" placeholder="请输入标题" clearable></el-input>
+      <el-form-item label="书名" prop="bookTitle">
+        <el-input type="text" v-model="searchForm.bookTitle" placeholder="请输入书名" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="作者" prop="authorName">
+        <el-input type="text" v-model="searchForm.authorName" placeholder="请输入作者" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="活动标签" prop="labelTitle">
+        <el-input type="text" v-model="searchForm.labelTitle" placeholder="请输入活动标签" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="开始时间" prop="startTime">
+        <el-date-picker v-model="searchForm.startTime" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
+      </el-form-item>
+      <el-form-item label="结束时间" prop="endTime">
+        <el-date-picker v-model="searchForm.endTime" type="datetime" placeholder="选择结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click.stop="apiNovelList">查询</el-button>
@@ -11,6 +23,13 @@
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+      <template #bookCover="{row}">
+        <el-image :preview-src-list="[row.bookCover]" :src="row.bookCover || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+          <div slot="error" class="flex-c-c img-err">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
+      </template>
       <template #bookState="{row}">
         <el-tag size="mini" :type="row.bookState == 0 ? 'success' : 'danger'">{{ ['更新','完结','停更'][row.bookState] }}</el-tag>
       </template>
@@ -85,6 +104,12 @@ export default {
     return {
       // 搜索表单
       searchForm: {
+        bookTitle: '',
+        authorName: '',
+        labelTitle: '',
+        startTime: '',
+        endTime: '',
+        typeId: '',
         pageNo:1,
         pageSize: 20,
       },
@@ -96,6 +121,7 @@ export default {
       columns: [
         {label: '排序', prop: 'sortNum', sortable: true},
         {label: '书名', prop: 'bookTitle'},
+        {slot:'bookCover',label: '封面图', prop: 'bookCover'},
         {label: '作者', prop: 'authorName'},
         {label: '字数', prop: 'wordCount'},
         {slot: 'bookState', label: '状态', prop: 'bookState'},
@@ -163,7 +189,11 @@ export default {
     },
     // 重置
     onReset(){
-      this.searchForm.keyword = ''
+      this.searchForm.bookTitle = ''
+      this.searchForm.authorName = ''
+      this.searchForm.labelTitle = ''
+      this.searchForm.startTime = ''
+      this.searchForm.endTime = ''
       this.apiNovelList()
     },
     onDialogCancle(){

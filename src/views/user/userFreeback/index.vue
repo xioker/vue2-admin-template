@@ -125,8 +125,7 @@ export default {
       customerReply(this.backForm).then(() => {
         this.apiCustomerList()
         this.$message.success(`回复成功`)
-        this.visible = false
-      }).finally(()=>{})
+      }).finally(()=>this.visible = false)
     },
     onDialogSure(){
       this.$refs.back.validate((valid) => {

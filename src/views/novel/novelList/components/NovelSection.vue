@@ -25,7 +25,6 @@
         </el-popconfirm>
       </template>
     </MyTable>
-    <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
     <!-- 修改新增弹框 -->
     <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
       <el-form ref="label" :model="sectionForm" label-position="right" label-width="60px">
@@ -48,11 +47,8 @@ export default {
     return {
       // 搜索表单
       searchForm: {
-        pageNo:1,
-        pageSize: 20,
         bookId: ''
       },
-      total: 0,
       // 表格数据
       tableList: [],
       // 表格loading
@@ -84,14 +80,8 @@ export default {
       if(this.tableLoading === false) this.tableLoading = true
       sectionList(this.searchForm).then(res => {
         this.tableList = res || []
-        this.total = Number(res.total) || 0
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
-    },
-    onPagination({page, limit}){
-      this.searchForm.pageNo = page
-      this.searchForm.pageSize = limit
-      this.apiSectionList()
     },
     // 新增
     onAdd(){

@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-form inline>
-      <el-form-item label="订单编号" prop="orderNo">
-        <el-input type="text" v-model="searchForm.orderNo" placeholder="请输入订单编号" clearable></el-input>
+      <el-form-item label="订单号" prop="orderNo">
+        <el-input type="text" v-model="searchForm.orderNo" placeholder="请输入订单号" clearable></el-input>
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input type="text" v-model="searchForm.phone" placeholder="请输入手机号" clearable></el-input>
@@ -76,7 +76,7 @@ export default {
       columns: [
         {slot: 'cusHead', label: '头像', prop: 'custHead'},
         {label: '用户昵称', prop: 'custName'},
-        {label: '手机号码', prop: 'phone'},
+        {label: '手机号', prop: 'phone'},
         {label: '订单号', prop: 'orderNo'},
         {label: '购买套餐名称', prop: 'packageName'},
         {slot: 'orderStatus', label: '订单状态', prop: 'orderStatus'},

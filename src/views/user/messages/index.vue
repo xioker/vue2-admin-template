@@ -21,6 +21,13 @@
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+      <template #img="{row}">
+        <el-image :preview-src-list="[row.img]" :src="row.img || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+          <div slot="error" class="flex-c-c img-err">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
+      </template>
       <template #sendCustType="{row}">
         <el-tag type="info">{{ ['全体','会员','普通用户'][row.sendCustType] }}</el-tag>
       </template>
@@ -54,6 +61,15 @@
             <el-option label="普通用户" :value="2">普通用户</el-option>
           </el-select>
         </el-form-item>
+        <!-- <el-form-item label="发送状态" prop="sendStatus">
+          <el-radio-group v-model="mailForm.sendStatus">
+            <el-radio :label="0">不发送</el-radio>
+            <el-radio :label="1">发送</el-radio>
+          </el-radio-group>
+        </el-form-item> -->
+        <el-form-item label="图片" prop="img">
+          <ImageUpload ref="up" :url.sync="mailForm.img" :params="{type: 1, module: 4 }"></ImageUpload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="onDialogCancle">取 消</el-button>
@@ -63,8 +79,10 @@
   </div>
 </template>
 <script>
+import ImageUpload from '@/components/Upload/ImageUpload.vue'
 import { mailList, mailDel, mailSave, mailSend } from '@/api/user'
 export default {
+  components: { ImageUpload },
   data() {
     return {
       searchForm: {
@@ -83,13 +101,14 @@ export default {
       columns: [
         {label: '序号', prop: 'index'},
         {label: '标题', prop: 'titile'},
+        {slot: 'img',label: '图片', prop: 'img'},
         {label: '内容', prop: 'content'},
         {label: '创建人', prop: 'createName'},
         {label: '创建时间', prop: 'createTime'},
         {slot: 'sendStatus',label: '发送状态', prop: 'sendStatus'},
         {slot: 'sendCustType',label: '发送类型', prop: 'sendCustType'},
         {label: '发送时间', prop: 'sendTime'},
-        {slot: 'action', label: '操作', prop: 'action', fixed: 'right', width:'300'},
+        {slot: 'action', label: '操作', prop: 'action', fixed: 'right', width:'280'},
       ],
       // 修改新增弹框数据
       title: '新增',
@@ -98,7 +117,9 @@ export default {
         maiId: '',
         titile: '',
         content: '',
-        sendCustType: ''
+        sendCustType: '',
+        sendStatus: 0,
+        img: ''
       }
     }
   },
@@ -136,6 +157,8 @@ export default {
         this.mailForm.titile = ''
         this.mailForm.content = ''
         this.mailForm.sendCustType = ''
+        this.mailForm.sendStatus = 0
+        this.mailForm.img = ''
       })
     },
     onDialogCancle(){
@@ -156,12 +179,14 @@ export default {
       })
     },
     // 详情数据接口
-    apiMailDetail({maiId, titile, content, isDel, sendCustType }) {
+    apiMailDetail({maiId, titile, content, isDel, sendCustType, sendStatus, img }) {
       this.title = '编辑'
       this.mailForm.maiId = maiId
       this.mailForm.titile = titile
       this.mailForm.content = content
       this.mailForm.sendCustType = Number(sendCustType)
+      this.mailForm.sendStatus = Number(sendStatus || 0)
+      this.mailForm.img = img
       this.visible = true
       // userDetail({userId}).then(res => {
       //   console.log(res)
