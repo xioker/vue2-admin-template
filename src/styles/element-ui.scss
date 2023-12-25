@@ -16,6 +16,9 @@
 }
 
 .cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .el-tag {
     margin-right: 0px;
   }

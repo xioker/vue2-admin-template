@@ -66,8 +66,9 @@
         <el-form-item label="简介">
           <el-input type="textarea" v-model="novelForm.bookTitle" placeholder="请输入标题" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="封面">
-          <el-input type="textarea" v-model="novelForm.bookCover" placeholder="请输入标题" autocomplete="off"></el-input>
+        <el-form-item label="封面" prop="bookCover">
+          <ImageUpload :url.sync="novelForm.bookCover" :params="{type: 1, module: 6 }"></ImageUpload>
+          <!-- <el-input type="textarea" v-model="novelForm.bookCover" placeholder="请输入标题" autocomplete="off"></el-input> -->
         </el-form-item>
         <el-form-item label="是否置顶" prop="isTop">
           <el-radio-group v-model="novelForm.isTop">
@@ -98,8 +99,10 @@
   </div>
 </template>
 <script>
+import ImageUpload from '@/components/Upload/ImageUpload.vue'
 import { bookFind, bookSave, bookDetail, bookUpdate } from '@/api/novel'
 export default {
+  components: { ImageUpload },
   data() {
     return {
       // 搜索表单
@@ -129,7 +132,7 @@ export default {
         {slot: 'chargeType', label: '付费类型', prop: 'chargeType'},
         {slot: 'isTop', label: '是否置顶', prop: 'isTop'},
         {label: '创建时间', prop: 'createTime'},
-        {label: '更新时间', prop: 'updateTime'},
+        // {label: '更新时间', prop: 'updateTime'},
         {slot: 'action', label: '操作', prop: 'action', fixed:'right', width: '280'},
       ],
       // 修改新增弹框数据

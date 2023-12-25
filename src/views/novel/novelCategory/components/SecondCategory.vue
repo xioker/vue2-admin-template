@@ -60,7 +60,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="分类图片" prop="typePic">
-          <SingleImage2></SingleImage2>
+          <ImageUpload :url.sync="typeForm.typePic" :params="{type: 1, module: 6 }"></ImageUpload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -91,12 +91,10 @@
 </template>
 <script>
 import { bookTypeList, bookTypeDetail, bookTypeDelete, bookTypeSave, bookTypeAddLabel, labelList } from '@/api/novel'
-import MyTable from '@/components/MyTable/index.vue'
-import SingleImage2 from '@/components/Upload/SingleImage2.vue'
+import ImageUpload from '@/components/Upload/ImageUpload.vue'
 export default {
   components: {
-    MyTable,
-    SingleImage2
+    ImageUpload
   },
   props: ['params'],
   data() {

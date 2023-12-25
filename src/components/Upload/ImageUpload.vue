@@ -81,7 +81,7 @@ export default {
       uploadFile(formData).then((res)=>{
         console.log(res)
         this.comUrl = res
-      })
+      }).finally(()=>{})
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);

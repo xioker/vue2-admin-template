@@ -1,8 +1,15 @@
 <template>
   <div>
-    <el-row style="margin-bottom: 10px;">
-      <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
-    </el-row>
+    <el-form inline>
+      <el-form-item label="关键字" prop="keyword">
+        <el-input type="text" v-model="searchForm.keyword" placeholder="请输入关键字" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click.stop="apiBookTypeList">查询</el-button>
+        <el-button type="info" @click.stop="onReset">重置</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
+      </el-form-item>
+    </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #typePic="{row}">
         <el-image :src="row.typePic || require('@/assets/images/img-no.jpg')" fit="cover" style="width:150px;height:50px"></el-image>
@@ -41,14 +48,11 @@
 </template>
 <script>
 import { bookBigTypeList, bookBigTypeDetail, bookBigTypeDelete, bookBigTypeSave } from '@/api/novel'
-import SingleImage2 from '@/components/Upload/SingleImage2.vue'
 export default {
-  components: {
-    SingleImage2
-  },
   data() {
     return {
       searchForm: {
+        keyword: '',
         pageNo: 1,
         pageSize: 20,
       },
@@ -93,6 +97,10 @@ export default {
     onPagination({page, limit}){
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
+      this.apiBookTypeList()
+    },
+    onReset(){
+      this.searchForm.keyword = ''
       this.apiBookTypeList()
     },
     // 新增

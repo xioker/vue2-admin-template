@@ -5,19 +5,23 @@
     </el-row>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #bannerSort="{row}">
-        <el-input size="mini" v-model="row.bannerSort"></el-input>
+        <el-input size="mini" type="number" v-model="row.bannerSort" @blur="(e)=>onSortChange(e,row)"></el-input>
       </template>
       <template #isDel="{row}">
         <el-tag :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.status == 1 ? '已停用' : '已启用' }}</el-tag>
+      </template>
+      <template #bannerUrl="{row}">
+        <el-image :preview-src-list="[row.bannerUrl]" :src="row.bannerUrl || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+          <div slot="error" class="flex-c-c img-err">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiBannerDetail(row)">编辑</el-button>
         <el-popconfirm @onConfirm="onStatus(row)" :title="`确定删除吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="danger">删除</el-button>
         </el-popconfirm>
-        <!-- <el-popconfirm @onConfirm="onStatus(row)" :title="`确定${row.status == 1 ? '禁用' : '启用'}吗`" style="margin-left:10px">
-          <el-button slot="reference" size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
-        </el-popconfirm> -->
       </template>
     </MyTable>
     <!-- 修改新增弹框 -->
@@ -26,8 +30,8 @@
           <el-form-item label="关联小说" prop="bookId" :rules="[{trigger:'blur',message: '关联小说不能为空',required: true}]">
             <el-input type="text" v-model="bannerForm.bookId" placeholder="请输入关联小说" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="轮播图链接" prop="bannerUrl">
-            <el-input type="text" v-model="bannerForm.bannerUrl" placeholder="请输入轮播图链接" autocomplete="off"></el-input>
+          <el-form-item label="banner图" prop="bannerUrl">
+            <ImageUpload :url.sync="bannerForm.bannerUrl" :params="{type: 1, module: 3 }"></ImageUpload>
           </el-form-item>
           <el-form-item label="排序" prop="bannerSort">
             <el-input-number v-model="bannerForm.bannerSort"></el-input-number>
@@ -48,7 +52,9 @@
 </template>
 <script>
 import { bannerList, bannerDetail, bannerSave, bannerDel, bannerSort } from '@/api/setting'
+import ImageUpload from '@/components/Upload/ImageUpload.vue'
 export default {
+  components: { ImageUpload },
   data() {
     return {
       searchForm: {
@@ -62,7 +68,7 @@ export default {
       columns: [
         {slot: 'bannerSort', label: '排序', prop: 'bannerSort'},
         {label: '关联小说名称', prop: 'bookName'},
-        {label: '轮播图链接', prop: 'bannerUrl'},
+        {slot: 'bannerUrl', label: 'banner图', prop: 'bannerUrl'},
         {slot: 'isDel', label: '状态', prop: 'isDel'},
         {label: '创建人', prop: 'createName'},
         {label: '创建时间', prop: 'createTime'},
@@ -93,12 +99,25 @@ export default {
         this.tableLoading = false
       }).finally(()=>this.tableLoading = false)
     },
+    onSortChange(e,{ bannerId, bannerSort: sort }){
+      bannerSort({ bannerId, sort }).then(()=>{
+        this.apiBannerList()
+        this.$message.success(`排序成功`)
+      })
+    },
     // 新增
     onAdd(){
+      this.title = '新增'
       this.visible = true
-      this.$refs.banner.resetFields()
+      this.$nextTick(()=>{
+        this.bannerForm.bannerId = ''
+        this.bannerForm.bookId = ''
+        this.bannerForm.bookName = ''
+        this.bannerForm.bannerUrl = ''
+      })
     },
     onDialogCancle(){
+      this.title === '新增' && this.$refs.banner.clearValidate()
       this.visible = false
     },
     onDialogSure(){
@@ -116,6 +135,7 @@ export default {
     },
     // 详情数据接口
     apiBannerDetail({bannerId, bannerUrl, bannerSort, isDel, bookId, bookName }) {
+      this.title = '编辑'
       this.bannerForm.bannerId = bannerId
       this.bannerForm.bookId = bookId
       this.bannerForm.bookName = bookName

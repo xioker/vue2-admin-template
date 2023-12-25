@@ -20,7 +20,7 @@
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiSectionDetail(row)">编辑</el-button>
-        <el-popconfirm @onConfirm="apiSectionDelete(row)" :title="`确定删除标签【${row.title}】吗`" style="margin-left:10px">
+        <el-popconfirm @onConfirm="apiSectionDelete(row)" :title="`确定删除标签【${row.sectionTitle}】吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="danger" icon="el-icon-delete">删除</el-button>
         </el-popconfirm>
       </template>

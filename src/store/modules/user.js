@@ -8,7 +8,7 @@ const state = {
   name: localStorage.getItem('name') ?? '',
   avatar: '',
   introduction: '',
-  roles: ['Admin'],
+  roles: [],
   userInfo: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : ''
 }
 
@@ -37,15 +37,19 @@ const mutations = {
 
 const actions = {
   // 登录 设置token以及用户信息
-  login({ commit }, userInfo) {
+  login({ commit, state, dispatch }, userInfo) {
     const { username, password, verifyCode, uuid } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password, verifyCode, uuid }).then(response => {
+      login({ username: username.trim(), password, verifyCode, uuid }).then(async response => {
         const { token, userName, userId } = response || {}
+        setToken(token)
         commit('SET_TOKEN', token)
         commit('SET_NAME', userName)
         commit('SET_USERINFO', { token, userName, userId })
-        setToken(token)
+
+        // const accessRoutes = await dispatch('permission/generateRoutes')
+        // router.addRoutes(accessRoutes)
+
         resolve()
       })
       .catch(error => {
@@ -100,6 +104,7 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
+      commit('SET_USERINFO', null)
       removeToken()
       resolve()
     })

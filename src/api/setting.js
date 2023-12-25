@@ -33,11 +33,11 @@ export function bannerDel(data) {
   })
 }
 // banner排序
-export function bannerSort(data) {
+export function bannerSort(params) {
   return request({
     url: '/sys-banner/banner_setSort',
     method: 'post',
-    data
+    params
   })
 }
 

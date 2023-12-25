@@ -10,7 +10,11 @@
       row-key="menuId"
       :tree-props="{children: 'children'}">
       <el-table-column align="center" label="序号" type="index"></el-table-column>
-      <el-table-column align="center" label="菜单名称" prop="menuName" show-overflow-tooltip></el-table-column>
+      <el-table-column align="center" label="菜单名称" prop="menuName" width="180">
+        <template #default="{row}">
+          <i :class="`el-icon-${row.icon}`" style="font-size: 20px;margin-right: 2px;"></i>{{ row.menuName }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="菜单类型" prop="menuType">
         <template #default="{row}">
           <el-tag :type="row.menuType == 1 ? 'primary' : 'warning'">{{ row.menuType == 1 ? '菜单' : '按钮' }}</el-tag>
@@ -24,7 +28,7 @@
       </el-table-column>
       <el-table-column align="center" label="组件路径" prop="component" show-overflow-tooltip></el-table-column>
       <el-table-column align="center" label="路由路径" prop="path"></el-table-column>
-      <el-table-column align="center" label="菜单图标" prop="icon"></el-table-column>
+      <!-- <el-table-column align="center" label="菜单图标" prop="icon"></el-table-column> -->
       <el-table-column align="center" label="备注" prop="remark"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="160"></el-table-column>
       <el-table-column align="center" label="更新时间" prop="updateTime" width="160"></el-table-column>
@@ -57,7 +61,7 @@
           <el-input type="text" v-model="menuForm.path" placeholder="请输入路由路径" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="菜单图标" prop="icon">
-          <el-input type="text" v-model="menuForm.icon" placeholder="请输入菜单图标" autocomplete="off"></el-input>
+          <IconSelect :value.sync="menuForm.icon"></IconSelect>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="menuForm.remark" placeholder="请输入备注" autocomplete="off"></el-input>
@@ -77,9 +81,12 @@
   </div>
 </template>
 <script>
+import IconSelect from '@/components/IconSelect/index.vue'
+import SvgIcon from '@/components/SvgIcon/index.vue'
 import { buildTree } from '@/utils'
 import { menuList,userDetail, menuSave, menuOper } from '@/api/auth'
 export default {
+  components: { IconSelect, SvgIcon },
   data() {
     return {
       // 表格数据
@@ -174,5 +181,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  
 </style>

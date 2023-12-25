@@ -8,8 +8,10 @@
         <el-tag size="mini" :type="row.status == 1 ? 'success' : 'danger'">{{ row.status == 1 ? '已启用' : '已禁用' }}</el-tag>
       </template>
       <template #action="{row}">
-        <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiRoleDetail(row)">编辑</el-button>
-        <el-button size="mini" type="primary" icon="el-icon-setting" @click="apiRoleDetail(row,'菜单配置')">菜单配置</el-button>
+        <template >
+          <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiRoleDetail(row)">编辑</el-button>
+          <el-button size="mini" type="primary" icon="el-icon-setting" @click="apiRoleDetail(row,'菜单配置')">菜单配置</el-button>
+        </template>
         <!-- <el-popconfirm @onConfirm="onStatus(row)" :title="`确定${row.status == 1 ? '禁用' : '启用'}吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
         </el-popconfirm> -->
@@ -55,6 +57,7 @@
 									:data="treeData"
 									show-checkbox
 									default-expand-all
+                  check-strictly
 									node-key="menuId"
 									:props="{children: 'children',label: 'menuName'}"
 								/>
@@ -202,7 +205,9 @@ export default {
     },
     onFormSubmit(){
       // 提交时候获取菜单选中的值  赋值给apidata.menuid
+      // const hids = this.$refs.treeRef?.getHalfCheckedKeys() || []
       const ids = this.$refs.treeRef?.getCheckedKeys() || []
+      // ids.push(hids)
 	    this.addMenu.menuId = ids.length > 0 ? ids.join(',') : ''
       console.log(this.addMenu)
       this.loading = true

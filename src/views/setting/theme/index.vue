@@ -1,11 +1,17 @@
 <template>
   <div>
     <el-form inline>
-      <el-form-item label="VIP专属" prop="isVip">
+      <el-form-item label="VIP专属">
         <el-select v-model="searchForm.isVip" placeholder="请选择VIP专属" clearable>
           <el-option label="是" :value="1" />
           <el-option label="否" :value="0" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="开始时间">
+        <el-date-picker clearable v-model="searchForm.createTimeStart" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
+      </el-form-item>
+      <el-form-item label="结束时间">
+        <el-date-picker clearable v-model="searchForm.createTimeEnd" type="datetime" placeholder="选择结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="apiThemeList">查询</el-button>
@@ -69,6 +75,8 @@ export default {
       // 搜索表单
       searchForm: {
         isVip: '',
+        createTimeStart: '',
+        createTimeEnd: '',
         pageNo:1,
         pageSize: 20,
       },
@@ -84,7 +92,7 @@ export default {
         {slot: 'isDel', label: '状态', prop: 'isDel'},
         {slot: 'isVip', label: 'VIP专属', prop: 'isVip'},
         {label: '创建人', prop: 'createName'},
-        {label: '更新时间', prop: 'createTime'},
+        {label: '创建时间', prop: 'createTime'},
         {slot: 'action', label: '操作', prop: 'action'},
       ],
       // 修改新增弹框数据
@@ -132,6 +140,8 @@ export default {
     // 重置
     onReset(){
       this.searchForm.isVip = ''
+      this.searchForm.createTimeEnd = ''
+      this.searchForm.createTimeStart= ''
       this.apiThemeList()
     },
     onDialogCancle(){

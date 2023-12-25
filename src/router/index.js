@@ -54,188 +54,187 @@ export const constantRoutes = [
   },
   
   // 权限管理
-  {
-    path: '/auth',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true, 
-    name: 'Auth',
-    meta: {
-      title: '权限管理',
-      icon: 'el-icon-menu',
-      roles: ['admin', 'editor'] 
-    },
-    children: [
-      {
-        path: 'menu',
-        component: () => import('@/views/auth/menu/index'),
-        name: 'Menu',
-        meta: {
-          title: '菜单控制',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/auth/role/index'),
-        name: 'Role',
-        meta: {
-          title: '角色管理'
-        }
-      },
-      {
-        path: 'userList',
-        component: () => import('@/views/auth/user/index'),
-        name: 'UserList',
-        meta: {
-          title: '管理员'
-        }
-      },
-    ]
-  },
-  // 用户管理
-  {
-    path: '/user',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'User',
-    meta: {
-      title: '用户管理',
-      icon: 'el-icon-user'
-    },
-    children: [
-      {
-        path: 'member',
-        component: () => import('@/views/user/member/index'),
-        name: 'Member',
-        meta: { title: '会员列表' }
-      },
-      {
-        path: 'memberLevel',
-        component: () => import('@/views/user/memberLevel/index'),
-        name: 'MemberLevel',
-        meta: { title: '会员等级' }
-      },
-      {
-        path: 'userFreeback',
-        component: () => import('@/views/user/userFreeback/index'),
-        name: 'UserFreeback',
-        meta: { title: '用户反馈' }
-      },
-      {
-        path: 'messages',
-        component: () => import('@/views/user/messages/index'),
-        name: 'Messages',
-        meta: { title: '站内信息' }
-      },
-      {
-        path: 'actionMessages',
-        component: () => import('@/views/user/actionMessages/index'),
-        name: 'ActionMessages',
-        meta: { title: '活动消息' }
-      },
-      {
-        path: 'memberMoney',
-        component: () => import('@/views/user/memberMoney/index'),
-        name: 'MemberMoney',
-        meta: { title: '会员费管理' }
-      }
-    ]
-  },
-  // 小说管理
-  {
-    path: '/novel',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'Novel',
-    meta: {
-      title: '小说管理',
-      icon: 'el-icon-reading'
-    },
-    children: [
-      {
-        path: 'novelList',
-        component: () => import('@/views/novel/novelList/index'),
-        name: 'NovelList',
-        meta: { title: '小说列表', noCache: true }
-      },
-      {
-        path: 'novelCategory',
-        component: () => import('@/views/novel/novelCategory/index'),
-        name: 'NovelCategory',
-        meta: { title: '小说分类', noCache: true }
-      },
-      {
-        path: 'novelAction',
-        component: () => import('@/views/novel/novelAction/index'),
-        name: 'NovelAction',
-        meta: { title: '小说活动标签', noCache: true }
-      },
-      {
-        path: 'order',
-        component: () => import('@/views/novel/order/index'),
-        name: 'Order',
-        meta: { title: '订单列表', noCache: true }
-      }
-    ]
-  },
-  // 设置管理
-  {
-    path: '/setting',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true, // will always show the root menu
-    name: 'Setting',
-    meta: {
-      title: '设置管理',
-      icon: 'el-icon-setting',
-      roles: ['admin', 'editor'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'theme',
-        component: () => import('@/views/setting/theme/index'),
-        name: 'Theme',
-        meta: {
-          title: '主题设置',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'banner',
-        component: () => import('@/views/setting/banner/index'),
-        name: 'Banner',
-        meta: {
-          title: '首页banner'
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-    ]
-  },
-  // 系统设置
-  {
-    path: '/sysSetting',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true, // will always show the root menu
-    name: 'SysSetting',
-    meta: {
-      title: '系统管理',
-      icon: 'el-icon-s-tools',
-    },
-    children: [
-      {
-        path: 'systemSetting',
-        component: () => import('@/views/systemSetting/index'),
-        name: 'SystemSetting',
-        meta: {
-          title: '系统设置',
-        }
-      },
-    ]
-  },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // {
+  //   path: '/auth',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   alwaysShow: true, 
+  //   name: 'Auth',
+  //   meta: {
+  //     title: '权限管理',
+  //     icon: 'el-icon-menu',
+  //     roles: ['admin', 'editor'] 
+  //   },
+  //   children: [
+  //     {
+  //       path: 'menu',
+  //       component: () => import('@/views/auth/menu/index'),
+  //       name: 'Menu',
+  //       meta: {
+  //         title: '菜单控制',
+  //         roles: ['admin'] // or you can only set roles in sub nav
+  //       }
+  //     },
+  //     {
+  //       path: 'role',
+  //       component: () => import('@/views/auth/role/index'),
+  //       name: 'Role',
+  //       meta: {
+  //         title: '角色管理'
+  //       }
+  //     },
+  //     {
+  //       path: 'account',
+  //       component: () => import('@/views/auth/account/index'),
+  //       name: 'Account',
+  //       meta: {
+  //         title: '管理员'
+  //       }
+  //     },
+  //   ]
+  // },
+  // // 用户管理
+  // {
+  //   path: '/user',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'User',
+  //   meta: {
+  //     title: '用户管理',
+  //     icon: 'el-icon-user'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'member',
+  //       component: () => import('@/views/user/member/index'),
+  //       name: 'Member',
+  //       meta: { title: '会员列表' }
+  //     },
+  //     {
+  //       path: 'memberLevel',
+  //       component: () => import('@/views/user/memberLevel/index'),
+  //       name: 'MemberLevel',
+  //       meta: { title: '会员等级' }
+  //     },
+  //     {
+  //       path: 'userFreeback',
+  //       component: () => import('@/views/user/userFreeback/index'),
+  //       name: 'UserFreeback',
+  //       meta: { title: '用户反馈' }
+  //     },
+  //     {
+  //       path: 'messages',
+  //       component: () => import('@/views/user/messages/index'),
+  //       name: 'Messages',
+  //       meta: { title: '站内信息' }
+  //     },
+  //     {
+  //       path: 'actionMessages',
+  //       component: () => import('@/views/user/actionMessages/index'),
+  //       name: 'ActionMessages',
+  //       meta: { title: '活动消息' }
+  //     },
+  //     {
+  //       path: 'memberMoney',
+  //       component: () => import('@/views/user/memberMoney/index'),
+  //       name: 'MemberMoney',
+  //       meta: { title: '会员费管理' }
+  //     }
+  //   ]
+  // },
+  // // 小说管理
+  // {
+  //   path: '/novel',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'Novel',
+  //   meta: {
+  //     title: '小说管理',
+  //     icon: 'el-icon-reading'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'novelList',
+  //       component: () => import('@/views/novel/novelList/index'),
+  //       name: 'NovelList',
+  //       meta: { title: '小说列表', noCache: true }
+  //     },
+  //     {
+  //       path: 'novelCategory',
+  //       component: () => import('@/views/novel/novelCategory/index'),
+  //       name: 'NovelCategory',
+  //       meta: { title: '小说分类', noCache: true }
+  //     },
+  //     {
+  //       path: 'novelAction',
+  //       component: () => import('@/views/novel/novelAction/index'),
+  //       name: 'NovelAction',
+  //       meta: { title: '小说活动标签', noCache: true }
+  //     },
+  //     {
+  //       path: 'order',
+  //       component: () => import('@/views/novel/order/index'),
+  //       name: 'Order',
+  //       meta: { title: '订单列表', noCache: true }
+  //     }
+  //   ]
+  // },
+  // // 设置管理
+  // {
+  //   path: '/setting',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Setting',
+  //   meta: {
+  //     title: '设置管理',
+  //     icon: 'el-icon-setting',
+  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'theme',
+  //       component: () => import('@/views/setting/theme/index'),
+  //       name: 'Theme',
+  //       meta: {
+  //         title: '主题设置',
+  //         roles: ['admin'] // or you can only set roles in sub nav
+  //       }
+  //     },
+  //     {
+  //       path: 'banner',
+  //       component: () => import('@/views/setting/banner/index'),
+  //       name: 'Banner',
+  //       meta: {
+  //         title: '首页banner'
+  //         // if do not set roles, means: this page does not require permission
+  //       }
+  //     },
+  //   ]
+  // },
+  // // 系统设置
+  // {
+  //   path: '/systemSetting',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'SystemSetting',
+  //   meta: {
+  //     title: '系统管理',
+  //     icon: 'el-icon-s-tools',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'sysSetting',
+  //       component: () => import('@/views/systemSetting/index'),
+  //       name: 'SysSetting',
+  //       meta: {
+  //         title: '系统设置',
+  //       }
+  //     },
+  //   ]
+  // },
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 

@@ -11,9 +11,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
-  // start progress bar
   NProgress.start()
-  // set page title
   document.title = getPageTitle()
 
   // determine whether the user has logged in
@@ -24,30 +22,27 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
-      next()
-      NProgress.done()
-      // const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      // const hasRoles = store.getters.addRoutes && store.getters.addRoutes.length > 0
-      // if (hasRoles) {
-      //   next()
-      // } else {
-      //   try {
-      //     // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-      //     // const { roles } = await store.dispatch('user/getInfo')
-
-      //     // generate accessible routes map based on roles
-      //     const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
-      //     router.addRoutes(accessRoutes)
-
-      //     next({ ...to, replace: true })
-      //   } catch (error) {
-      //     await store.dispatch('user/resetToken')
-      //     Message.error(error || '出错了')
-      //     next(`/login?redirect=${to.path}`)
-      //     NProgress.done()
-      //   }
-      // }
+      // next()
+      // NProgress.done()
+      const hasRoles = store.getters.addRoutes && store.getters.addRoutes.length > 0
+      if (hasRoles) {
+        console.log(to,'22')
+        next()
+      } else {
+        console.log(to,'33')
+        try {
+          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          const accessRoutes = await store.dispatch('permission/generateRoutes')
+          router.addRoutes(accessRoutes)
+          next({ ...to, replace: true })
+        } catch (error) {
+          await store.dispatch('user/resetToken')
+          Message.error(error || '出错了')
+          next(`/login?redirect=${to.path}`)
+          store.dispatch('permission/resetRouter')
+          NProgress.done()
+        }
+      }
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
