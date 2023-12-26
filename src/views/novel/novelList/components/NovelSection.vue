@@ -26,22 +26,49 @@
       </template>
     </MyTable>
     <!-- 修改新增弹框 -->
-    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
-      <el-form ref="label" :model="sectionForm" label-position="right" label-width="60px">
-        <el-form-item label="标题" prop="title" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
-          <el-input type="text" v-model="sectionForm.title" placeholder="请输入标题" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="onDialogCancle">取 消</el-button>
-        <el-button type="primary" @click="onDialogSure">确 定</el-button>
-      </div>
-    </el-dialog>
+    <el-drawer :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" destroy-on-close>
+			<template #default >
+				<el-card v-loading="loading">
+					<el-form label-position="right" label-width="100px" ref="sForm" :model="sectionForm" style="width: 90%;margin: auto;">
+            <el-form-item label="标题" prop="title" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
+              <el-input v-model="sectionForm.title" placeholder="请输入标题"></el-input>
+            </el-form-item>
+						<el-form-item label="字数" prop="wordCount">
+              <el-input v-model="sectionForm.wordCount" placeholder="请输入字数"></el-input>
+            </el-form-item>
+            <el-form-item label="排序" prop="sortNum">
+              <el-input-number v-model="sectionForm.sortNum" placeholder="请输入排序"></el-input-number>
+            </el-form-item>
+            <el-form-item label="是否免费" prop="isFree">
+              <el-radio-group v-model="sectionForm.isFree">
+                <el-radio :label="0">否</el-radio>
+                <el-radio :label="1">是</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="是否目录加粗" prop="isBold">
+              <el-radio-group v-model="sectionForm.isBold">
+                <el-radio :label="0">否</el-radio>
+                <el-radio :label="1">是</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="内容" prop="content">
+              <Tinymce v-model="sectionForm.content" :params="{type: 1, module: 7 }"></Tinymce>
+            </el-form-item>
+					</el-form>
+					<div style="text-align: start;width: 90%;margin: auto;">
+						<el-button type="primary" @click="onDialogSure">保存</el-button>
+						<el-button @click="onDialogCancle">取消</el-button>
+					</div>
+				</el-card>
+			</template>
+		</el-drawer>
   </div>
 </template>
 <script>
+import Tinymce from '@/components/Tinymce/index.vue'
 import { sectionList, sectionDelete, sectionSave } from '@/api/novel'
 export default {
+  components: { Tinymce },
   props: ['params'],
   data() {
     return {
@@ -54,7 +81,8 @@ export default {
       // 表格loading
       tableLoading: true,
       columns: [
-        {label: '序号', prop: 'index'},
+        // {label: '序号', prop: 'index'},
+        {label: '排序', prop: 'sortNum'},
         {label: '标题', prop: 'sectionTitle'},
         {label: '字数', prop: 'wordCount'},
         {slot: 'isFree', label: '是否免费', prop: 'isFree'},
@@ -64,9 +92,15 @@ export default {
       // 修改新增弹框数据
       title: '新增',
       visible: false,
+      loading: false,
       sectionForm: {
         sectionId: '',
         title: '',
+        wordCount: '',
+        sortNum: 0,
+        isFree: 0,
+        isBold: 0,
+        content: ''
       }
     }
   },
@@ -90,6 +124,11 @@ export default {
       this.$nextTick(()=>{
         this.sectionForm.sectionId = ''
         this.sectionForm.title = ''
+        this.sectionForm.sortNum = 0
+        this.sectionForm.isBold = 0
+        this.sectionForm.isFree = 0
+        this.sectionForm.wordCount = ''
+        this.sectionForm.content = ''
       })
     },
     // 重置
@@ -98,27 +137,33 @@ export default {
       this.apiSectionList()
     },
     onDialogCancle(){
-      this.title === '新增' && this.$refs.label.clearValidate()
+      this.title === '新增' && this.$refs.sForm.clearValidate()
       this.visible = false
     },
     onDialogSure(){
-      this.$refs.label.validate((valid) => {
+      this.$refs.sForm.validate((valid) => {
         if(valid){
+          this.loading = true
           const { sectionId } = this.sectionForm
           sectionSave(this.sectionForm).then(()=>{
             this.apiSectionList()
             this.visible = false
-            this.$refs.label.resetFields()
+            this.$refs.sForm.resetFields()
             this.$message.success(`${sectionId ? '编辑' : '新增'}成功`)
-          })
+          }).finally(() => this.loading = false)
         }
       })
     },
     // 详情数据接口
-    apiSectionDetail({ sectionId, title }) {
+    apiSectionDetail({ sectionId, sectionTitle, sortNum, wordCount, isBold, isFree, content }) {
       this.title = '编辑'
       this.sectionForm.sectionId = sectionId
-      this.sectionForm.title = title
+      this.sectionForm.title = sectionTitle
+      this.sectionForm.wordCount = wordCount
+      this.sectionForm.content = content
+      this.sectionForm.sortNum = Number(sortNum || 0)
+      this.sectionForm.isBold = Number(isBold || 0)
+      this.sectionForm.isFree = Number(isFree || 0)
       this.visible = true
       // userDetail({userId}).then(res => {
       //   console.log(res)
@@ -135,5 +180,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+::v-deep .el-drawer {
+	width: calc(100vw - 210px) !important;
+  header{
+    margin-bottom: 0;
+  }
+  .el-card{
+    margin: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 100px);
+  }
+}
 </style>

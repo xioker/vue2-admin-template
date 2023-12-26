@@ -28,11 +28,6 @@ service.interceptors.response.use(
   response => {
     const { msg, status, data } = response.data
     if (status && status != 200) {
-      Message({
-        message: msg || 'Error',
-        type: 'error',
-        duration: 3 * 1000
-      })
 
       if (['401'].includes(status)) {
         MessageBox.confirm('登录失效，请重新登录', '提示', {
@@ -44,7 +39,13 @@ service.interceptors.response.use(
             router.push('/login')
           })
         })
+        return Promise.reject()
       }
+      Message({
+        message: msg || 'Error',
+        type: 'error',
+        duration: 3 * 1000
+      })
       return Promise.reject(response.data || 'Error')
     } else {
       return data || response.data

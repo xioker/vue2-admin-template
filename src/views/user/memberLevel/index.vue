@@ -98,7 +98,7 @@ export default {
     // 列表接口
     apiLevelList(){
       if(this.tableLoading === false) this.tableLoading = true
-      levelList(this.searchForm).then(res => {
+      levelList().then(res => {
         this.tableList = res || []
         this.tableLoading = false
       }).finally(()=>this.tableLoading = false)

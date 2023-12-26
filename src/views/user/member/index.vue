@@ -1,17 +1,33 @@
 <template>
   <div class="container">
     <el-form inline>
-      <el-form-item label="创建时间">
-        <el-input placeholder="创建时间"></el-input>
+      <el-form-item label="账号">
+        <el-input placeholder="请输入账号" v-model="searchForm.account" clearable></el-input>
       </el-form-item>
-      <el-form-item label="创建时间">
-        <el-input placeholder="创建时间"></el-input>
+      <el-form-item label="昵称">
+        <el-input placeholder="请输入昵称" v-model="searchForm.custName" clearable></el-input>
       </el-form-item>
-      <el-form-item label="创建时间">
-        <el-input placeholder="创建时间"></el-input>
+      <el-form-item label="手机号">
+        <el-input placeholder="请输入手机号" v-model="searchForm.phone" clearable></el-input>
       </el-form-item>
-      <el-form-item label="创建时间">
-        <el-input placeholder="创建时间"></el-input>
+      <el-form-item label="用户来源">
+        <el-select placeholder="请选择用户来源" v-model="searchForm.source" clearable>
+          <el-option value="1" label="APP"></el-option>
+          <el-option value="2" label="PC"></el-option>
+          <el-option value="3" label="微信"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="注册开始时间">
+        <el-date-picker clearable v-model="searchForm.registerTimeStart" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
+      </el-form-item>
+      <el-form-item label="注册结束时间">
+        <el-date-picker clearable v-model="searchForm.registerTimeEnd" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
+      </el-form-item>
+      <el-form-item label="会员到期开始时间">
+        <el-date-picker clearable v-model="searchForm.expirationTimeStart" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
+      </el-form-item>
+      <el-form-item label="会员到期结束时间">
+        <el-date-picker clearable v-model="searchForm.expirationTimeEnd" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
       </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
@@ -43,6 +59,7 @@
         </template>
       </template>
     </MyTable>
+    <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
   </div>
 </template>
 <script>
@@ -53,6 +70,14 @@ export default {
       searchForm: {
         pageNo: 1,
         pageSize: 20,
+        account: '',
+        custName: '',
+        phone: '',
+        source: '',
+        registerTimeStart: '',
+        registerTimeEnd: '',
+        expirationTimeStart: '',
+        expirationTimeEnd: ''
       },
       total: 0,
       // 表格数据
@@ -86,6 +111,11 @@ export default {
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
       }).finally(() =>this.tableLoading = false)
+    },
+    onPagination({page, limit}){
+      this.searchForm.pageNo = page
+      this.searchForm.pageSize = limit
+      this.apiCustomer()
     },
   }
 }

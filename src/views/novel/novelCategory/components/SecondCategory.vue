@@ -60,7 +60,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="分类图片" prop="typePic">
-          <ImageUpload :url.sync="typeForm.typePic" :params="{type: 1, module: 6 }"></ImageUpload>
+          <ImageUpload></ImageUpload>
+          <!-- <ImageUpload :url.sync="typeForm.typePic" :params="{type: 1, module: 6 }"></ImageUpload> -->
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

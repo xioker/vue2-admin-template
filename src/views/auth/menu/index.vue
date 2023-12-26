@@ -10,7 +10,7 @@
       row-key="menuId"
       :tree-props="{children: 'children'}">
       <el-table-column align="center" label="序号" type="index"></el-table-column>
-      <el-table-column align="center" label="菜单名称" prop="menuName" width="180">
+      <el-table-column align="left" label="菜单名称" prop="menuName">
         <template #default="{row}">
           <i :class="`el-icon-${row.icon}`" style="font-size: 20px;margin-right: 2px;"></i>{{ row.menuName }}
         </template>
@@ -181,4 +181,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+::v-deep.el-table{
+  .cell{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 </style>

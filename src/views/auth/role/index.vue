@@ -8,7 +8,7 @@
         <el-tag size="mini" :type="row.status == 1 ? 'success' : 'danger'">{{ row.status == 1 ? '已启用' : '已禁用' }}</el-tag>
       </template>
       <template #action="{row}">
-        <template >
+        <template v-if="row.roleName !=='超级管理员'">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiRoleDetail(row)">编辑</el-button>
           <el-button size="mini" type="primary" icon="el-icon-setting" @click="apiRoleDetail(row,'菜单配置')">菜单配置</el-button>
         </template>

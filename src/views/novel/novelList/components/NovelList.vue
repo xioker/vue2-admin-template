@@ -64,7 +64,7 @@
           <el-input type="text" v-model="novelForm.wordCount" placeholder="请输入字数" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="简介">
-          <el-input type="textarea" v-model="novelForm.bookTitle" placeholder="请输入标题" autocomplete="off"></el-input>
+          <el-input type="textarea" v-model="novelForm.bookTitle" placeholder="请输入简介" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="封面" prop="bookCover">
           <ImageUpload :url.sync="novelForm.bookCover" :params="{type: 1, module: 6 }"></ImageUpload>

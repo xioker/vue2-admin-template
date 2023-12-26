@@ -1,14 +1,14 @@
 import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
-import NProgress from 'nprogress' // progress bar
+import NProgress from 'nprogress' 
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken } from '@/utils/auth' 
 import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+const whiteList = ['/login', '/auth-redirect'] 
 
 router.beforeEach(async(to, from, next) => {
   NProgress.start()
@@ -20,16 +20,12 @@ router.beforeEach(async(to, from, next) => {
   if (hasToken) {
     if (to.path === '/login') {
       next({ path: '/' })
-      NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
+      NProgress.done() 
     } else {
-      // next()
-      // NProgress.done()
       const hasRoles = store.getters.addRoutes && store.getters.addRoutes.length > 0
       if (hasRoles) {
-        console.log(to,'22')
         next()
       } else {
-        console.log(to,'33')
         try {
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const accessRoutes = await store.dispatch('permission/generateRoutes')
