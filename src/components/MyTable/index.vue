@@ -1,5 +1,8 @@
 <template>
-  <el-table ref="table" :data="data" v-bind="$attrs" v-on="$listeners">
+  <el-table ref="table" :data="data" v-bind="$attrs" v-on="$listeners" height="calc(100vh - 220px)"
+    max-height="calc(100vh - 220px)"
+    style="overflow-y: auto;"
+  >
     <template v-for="(co, ind) in columns">
       <el-table-column
         :label="co.label"

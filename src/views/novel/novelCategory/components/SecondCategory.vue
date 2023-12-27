@@ -14,7 +14,7 @@
     
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #channelBelong="{row}">
-        <span>{{ row.channelBelong == 1 ? '男' : '女' }}</span>
+        <span>{{ row.channelBelong == 2 ? '女' : '男' }}</span>
       </template>
       <template #labelNames="{row}">
         <template v-if="row.labelNames">
@@ -250,7 +250,7 @@ export default {
       this.typeForm.typeTitle = typeTitle
       this.typeForm.readCount = readCount
       this.typeForm.sortNum = Number(sortNum || 0)
-      this.typeForm.channelBelong = Number(channelBelong)
+      this.typeForm.channelBelong = Number(channelBelong || 1)
       this.typeForm.typePic = typePic
       this.visible = true
       // userDetail({userId}).then(res => {

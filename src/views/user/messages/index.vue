@@ -22,7 +22,7 @@
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #img="{row}">
-        <el-image :preview-src-list="[row.img]" :src="row.img || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+        <el-image :preview-src-list="[row.img]" :src="row.img || require('@/assets/images/img-no.jpg')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
           <div slot="error" class="flex-c-c img-err">
             <i class="el-icon-picture-outline"></i>
           </div>
@@ -32,11 +32,11 @@
         <el-tag type="info">{{ ['全体','会员','普通用户'][row.sendCustType] }}</el-tag>
       </template>
       <template #sendStatus="{row}">
-        <el-tag size="mini" :type="row.sendStatus && row.sendStatus == 1 ? 'success' : 'danger'">{{ row.sendStatus && row.sendStatus == 1 ? '已发送' : '未发送' }}</el-tag>
+        <el-tag size="mini" :type="row.sendStatus == 1 ? 'success' : 'danger'">{{ row.sendStatus == 1 ? '已发送' : '待发送' }}</el-tag>
       </template>
       <template #action="{row}">
         <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiMailDetail(row)" :disabled="row.sendStatus == 1">编辑</el-button>
-        <el-popconfirm @onConfirm="onStatus(row)" :title="`确定发送吗`" style="margin-left:10px">
+        <el-popconfirm @onConfirm="onStatus(row)" :title="`确定发送【${row.titile || ''}】吗`" style="margin-left:10px">
           <el-button slot="reference" size="mini" type="success" :disabled="row.sendStatus == 1">发送</el-button>
         </el-popconfirm>
         <el-popconfirm @onConfirm="onDel(row)" :title="`确定删除吗`" style="margin-left:10px">

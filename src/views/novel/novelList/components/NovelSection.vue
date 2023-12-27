@@ -11,7 +11,7 @@
       </el-form-item>
       <el-button type="success" @click="$parent.changeCom" style="float: right;">返回小说列表</el-button>
     </el-form>
-    <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+    <MyTable v-loading="tableLoading" :data="tableList" :columns="columns" style="overflow-y: auto;max-height:calc(100vh - 150px);height:calc(100vh - 150px)">
       <template #isFree="{row}">
         <el-tag :type="row.isFree == 0 ? 'success' : 'danger'">{{ row.isFree == 1 ? '收费' : '免费' }}</el-tag>
       </template>
@@ -52,7 +52,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="内容" prop="content">
-              <Tinymce v-model="sectionForm.content" :params="{type: 1, module: 7 }"></Tinymce>
+              <Tinymce ref="tinymce" v-model="sectionForm.content" :params="{type: 1, module: 7 }"></Tinymce>
             </el-form-item>
 					</el-form>
 					<div style="text-align: start;width: 90%;margin: auto;">
@@ -66,7 +66,7 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce/index.vue'
-import { sectionList, sectionDelete, sectionSave } from '@/api/novel'
+import { sectionList, sectionDelete, sectionSave, sectionDetail } from '@/api/novel'
 export default {
   components: { Tinymce },
   props: ['params'],
@@ -86,7 +86,7 @@ export default {
         {label: '标题', prop: 'sectionTitle'},
         {label: '字数', prop: 'wordCount'},
         {slot: 'isFree', label: '是否免费', prop: 'isFree'},
-        {slot: 'isBold', label: '是否目录加粗', prop: 'isBold'},
+        // {slot: 'isBold', label: '是否目录加粗', prop: 'isBold'},
         {slot: 'action', label: '操作', prop: 'action', fixed:'right', width: '200'},
       ],
       // 修改新增弹框数据
@@ -129,6 +129,7 @@ export default {
         this.sectionForm.isFree = 0
         this.sectionForm.wordCount = ''
         this.sectionForm.content = ''
+        this.$refs.tinymce.setContent('')
       })
     },
     // 重置
@@ -157,17 +158,20 @@ export default {
     // 详情数据接口
     apiSectionDetail({ sectionId, sectionTitle, sortNum, wordCount, isBold, isFree, content }) {
       this.title = '编辑'
-      this.sectionForm.sectionId = sectionId
-      this.sectionForm.title = sectionTitle
-      this.sectionForm.wordCount = wordCount
-      this.sectionForm.content = content
-      this.sectionForm.sortNum = Number(sortNum || 0)
-      this.sectionForm.isBold = Number(isBold || 0)
-      this.sectionForm.isFree = Number(isFree || 0)
+      if(this.loading === false) this.loading = true
       this.visible = true
-      // userDetail({userId}).then(res => {
-      //   console.log(res)
-      // })
+      sectionDetail({bookSectionId:sectionId}).then(res => {
+        const { sectionId, sectionTitle, sortNum, wordCount, isBold, isFree, content } = res || {}
+        this.sectionForm.sectionId = sectionId
+        this.sectionForm.title = sectionTitle
+        this.sectionForm.wordCount = wordCount
+        this.sectionForm.content = content
+        this.$refs.tinymce.setContent(content || '')
+        this.sectionForm.sortNum = Number(sortNum || 0)
+        this.sectionForm.isBold = Number(isBold || 0)
+        this.sectionForm.isFree = Number(isFree || 0)
+        console.log(res)
+      }).finally(() =>this.loading = false)
     },
     // 删除数据接口
     apiSectionDelete({ sectionId:bookSectionId }) {

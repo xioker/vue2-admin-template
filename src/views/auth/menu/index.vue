@@ -2,15 +2,22 @@
   <div>
     <el-row style="margin-bottom: 10px;">
       <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
+      <!-- <el-button @click="onExpand(1)">展开全部</el-button>
+      <el-button @click="onExpand(0)">折叠全部</el-button> -->
     </el-row>
     <!-- 表格数据 -->
     <el-table
+      ref="treeTable"
       v-loading="tableLoading"
       :data="tableList"
       row-key="menuId"
-      :tree-props="{children: 'children'}">
+      :tree-props="{children: 'children'}"
+      height="calc(100vh - 150px)"
+      max-height="calc(100vh - 150px)"
+      style="overflow-y: auto;"
+      >
       <el-table-column align="center" label="序号" type="index"></el-table-column>
-      <el-table-column align="left" label="菜单名称" prop="menuName">
+      <el-table-column align="left" label="菜单名称" prop="menuName" width="200">
         <template #default="{row}">
           <i :class="`el-icon-${row.icon}`" style="font-size: 20px;margin-right: 2px;"></i>{{ row.menuName }}
         </template>
@@ -108,6 +115,9 @@ export default {
         status: 1,
         remark: ''
       },
+      // tree: [],
+      // expand: true,
+      // expandKeys: []
     }
   },
   created() {
@@ -118,9 +128,19 @@ export default {
     apiMenuList(){
       menuList({pageNo:1, pageSize: 200}).then(res => {
         this.tableList = res.list ? buildTree(res.list) : []
+        this.tree = res.list || []
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
     },
+    // onExpand(type){
+    //   if(type === 1){
+    //     this.expand = true
+    //     this.expandKeys = this.tree.map(item=>item.menuId)
+    //   }else if(type === 0){
+    //     this.expand = false
+    //     this.expandKeys = []
+    //   }
+    // },
     // 新增
     onAdd(){
       this.title = '新增'

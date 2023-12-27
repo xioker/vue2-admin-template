@@ -3,7 +3,7 @@
     <el-row style="margin-bottom: 10px;">
       <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
     </el-row>
-    <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
+    <MyTable v-loading="tableLoading" :data="tableList" :columns="columns" style="overflow-y: auto;max-height:calc(100vh - 150px);height:calc(100vh - 150px)">
       <template #isDel="{row}">
         <el-tag size="mini" :type="row.isDel && row.isDel == 1 ? 'danger' : 'success'">{{ row.isDel && row.isDel == 1 ? '已停用' : '已启用' }}</el-tag>
       </template>

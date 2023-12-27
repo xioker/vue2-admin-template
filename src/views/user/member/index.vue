@@ -17,6 +17,16 @@
           <el-option value="3" label="微信"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="排序字段">
+        <el-select placeholder="请选择排序字段" v-model="searchForm.orderBy" clearable>
+          <el-option value="1" label="金币余额"></el-option>
+          <el-option value="2" label="注册时间"></el-option>
+          <el-option value="3" label="阅读时长"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="省份/城市">
+        <el-cascader v-model="province"  :options="jsonData" :props="{ checkStrictly: true, label: 'name', value: 'name' }" clearable placeholder="请选择省份/城市" />
+      </el-form-item>
       <el-form-item label="注册开始时间">
         <el-date-picker clearable v-model="searchForm.registerTimeStart" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
       </el-form-item>
@@ -29,6 +39,10 @@
       <el-form-item label="会员到期结束时间">
         <el-date-picker clearable v-model="searchForm.expirationTimeEnd" type="datetime" placeholder="选择开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click.stop="apiCustomer">查询</el-button>
+        <el-button type="info" @click.stop="onReset">重置</el-button>
+      </el-form-item>
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #headUrl="{row}">
@@ -37,6 +51,9 @@
             <i class="el-icon-picture-outline"></i>
           </div>
         </el-image>
+      </template>
+      <template #account="{row}">
+        {{ row.account }} <el-tag size="mini" v-if="row.account" @click="onCopy(row.account,$event)" class="pointer">点击复制</el-tag>
       </template>
       <template #source="{row}">
         <el-tag type="info">{{ ['APP','PC','微信'][row.source] }}</el-tag>
@@ -51,22 +68,22 @@
         <el-tag size="mini" :type="row.isVip == 1 ? 'success' : 'danger'">{{ row.isVip == 1 ? '是' : '否' }}</el-tag>
       </template>
       <template #action="{row}">
-        <template>
-          <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiUserDetail(row)">编辑</el-button>
-          <!-- <el-popconfirm @onConfirm="onStatus(row)" :title="`确定${row.status == 1 ? '禁用' : '启用'}吗`" style="margin-left:10px">
-            <el-button slot="reference" size="mini" :type="row.status == 1 ? 'danger' : 'primary'">{{ row.status == 1 ? '禁用' : '启用' }}</el-button>
-          </el-popconfirm> -->
-        </template>
+        <!-- <el-button size="mini" type="primary" icon="el-icon-edit" @click="apiUserDetail(row)">编辑</el-button> -->
+        <el-popconfirm @onConfirm="onStatus(row)" :title="`确定${row.status == 1 ? '启用' : '删除'}吗`" style="margin-left:10px">
+          <el-button slot="reference" size="mini" :type="row.status == 1 ? 'primary' : 'danger'">{{ row.status == 1 ? '启用' : '删除' }}</el-button>
+        </el-popconfirm>
       </template>
     </MyTable>
     <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
   </div>
 </template>
 <script>
+import clip from '@/utils/clipboard'
 import { customer, opCustomer } from '@/api/user'
 export default {
   data(){
     return {
+      jsonData: require('./pca-code.json'),
       searchForm: {
         pageNo: 1,
         pageSize: 20,
@@ -74,11 +91,15 @@ export default {
         custName: '',
         phone: '',
         source: '',
+        orderBy: '',
         registerTimeStart: '',
         registerTimeEnd: '',
         expirationTimeStart: '',
-        expirationTimeEnd: ''
+        expirationTimeEnd: '',
+        province: '',
+        city: ''
       },
+      province: '',
       total: 0,
       // 表格数据
       tableList: [],
@@ -86,7 +107,7 @@ export default {
       tableLoading: true,
       columns: [
         {slot: 'headUrl', label: '头像', prop: 'headUrl'},
-        {label: '账号', prop: 'account'},
+        {slot: 'account', label: '账号', prop: 'account'},
         {label: '用户名', prop: 'custName'},
         {label: '手机号', prop: 'phone'},
         {slot: 'isDel', label: '状态', prop: 'isDel'},
@@ -106,17 +127,49 @@ export default {
   },
   methods: {
     apiCustomer(){
+      // 处理下城市选择
+      if(this.province){
+        this.searchForm.province = this.province[0]    
+        this.searchForm.city = this.province[1]        
+      }else{
+        this.searchForm.province = ''      
+        this.searchForm.city = ''    
+      }
       if(this.tableLoading === false) this.tableLoading = true
       customer(this.searchForm).then((res)=>{
         this.tableList = res.list || []
         this.total = Number(res.total) || 0
       }).finally(() =>this.tableLoading = false)
     },
+    onReset(){
+      this.searchForm.account = ''
+      this.searchForm.custName = ''
+      this.searchForm.phone = ''
+      this.searchForm.source = ''
+      this.searchForm.orderBy = ''
+      this.searchForm.registerTimeStart = ''
+      this.searchForm.registerTimeEnd = ''
+      this.searchForm.expirationTimeStart = ''
+      this.searchForm.expirationTimeEnd = ''
+      this.searchForm.province = ''      
+      this.searchForm.city = ''      
+      this.province = ''      
+      this.apiCustomer()
+    },
+    onCopy(e,event){
+      clip(e,event)
+    },
     onPagination({page, limit}){
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
       this.apiCustomer()
     },
+    onStatus({ customerId, status }){
+      opCustomer({ customerId, opType: status == 1 ? 1 : 2 }).then(()=>{
+        this.$message.success(`${status == 1 ? '启用' : '删除'}成功`)
+        this.apiCustomer()
+      })
+    }
   }
 }
 </script>

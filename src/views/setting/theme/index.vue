@@ -21,7 +21,7 @@
     </el-form>
     <MyTable v-loading="tableLoading" :data="tableList" :columns="columns">
       <template #themeImg="{row}">
-        <el-image :preview-src-list="[row.themeImg]" :src="row.themeImg || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+        <el-image :preview-src-list="[row.themeImg]" :src="row.themeImg || require('@/assets/images/img-no.jpg')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
           <div slot="error" class="flex-c-c img-err">
             <i class="el-icon-picture-outline"></i>
           </div>

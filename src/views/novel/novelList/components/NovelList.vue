@@ -49,40 +49,66 @@
     </MyTable>
     <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
     <!-- 修改新增弹框 -->
-    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
+    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="900px" :before-close="onDialogCancle">
       <el-form ref="novel" :model="novelForm" label-position="right" label-width="80px">
-        <el-form-item label="标题" prop="bookTitle" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
-          <el-input type="text" v-model="novelForm.bookTitle" placeholder="请输入标题" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="价格" prop="bookPrice" :rules="[{trigger:'blur',message: '价格不能为空',required: true}]">
-          <el-input type="text" v-model="novelForm.bookPrice" placeholder="请输入价格" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="排序" prop="sortNum">
-          <el-input type="text" v-model="novelForm.sortNum" placeholder="请输入排序" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="字数" prop="wordCount">
-          <el-input type="text" v-model="novelForm.wordCount" placeholder="请输入字数" autocomplete="off"></el-input>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="标题" prop="bookTitle" :rules="[{trigger:'blur',message: '标题不能为空',required: true}]">
+              <el-input type="text" v-model="novelForm.bookTitle" placeholder="请输入标题" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="价格" prop="bookPrice" :rules="[{trigger:'blur',message: '价格不能为空',required: true}]">
+            <el-input type="text" v-model="novelForm.bookPrice" placeholder="请输入价格" autocomplete="off"></el-input>
+          </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="排序" prop="sortNum">
+              <el-input type="text" v-model="novelForm.sortNum" placeholder="请输入排序" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="字数" prop="wordCount">
+              <el-input type="text" v-model="novelForm.wordCount" placeholder="请输入字数" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="简介">
           <el-input type="textarea" v-model="novelForm.bookTitle" placeholder="请输入简介" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="封面" prop="bookCover">
-          <ImageUpload :url.sync="novelForm.bookCover" :params="{type: 1, module: 6 }"></ImageUpload>
-          <!-- <el-input type="textarea" v-model="novelForm.bookCover" placeholder="请输入标题" autocomplete="off"></el-input> -->
-        </el-form-item>
-        <el-form-item label="是否置顶" prop="isTop">
-          <el-radio-group v-model="novelForm.isTop">
-            <el-radio :label="0">否</el-radio>
-            <el-radio :label="1">是</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="状态" prop="bookState">
-          <el-radio-group v-model="novelForm.bookState">
-            <el-radio :label="0">更新</el-radio>
-            <el-radio :label="1">完结</el-radio>
-            <el-radio :label="2">停更</el-radio>
-          </el-radio-group>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="封面" prop="bookCover">
+              <ImageUpload :url.sync="novelForm.bookCover" :params="{type: 1, module: 6 }"></ImageUpload>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="分类选择" prop="typeName">
+              <el-input type="text" v-model="novelForm.typeName" placeholder="请选择分类" disabled autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="是否置顶" prop="isTop">
+              <el-radio-group v-model="novelForm.isTop">
+                <el-radio :label="0">否</el-radio>
+                <el-radio :label="1">是</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="bookState">
+              <el-radio-group v-model="novelForm.bookState">
+                <el-radio :label="0">更新</el-radio>
+                <el-radio :label="1">完结</el-radio>
+                <el-radio :label="2">停更</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="付费类型" prop="chargeType">
           <el-radio-group v-model="novelForm.chargeType">
             <el-radio :label="0">完全免费</el-radio>
@@ -91,6 +117,34 @@
           </el-radio-group>
         </el-form-item>
       </el-form>
+      <h4>绑定分类选择</h4>
+      <el-form inline>
+        <el-form-item>
+          <el-input type="text" v-model="bookForm.keyword" placeholder="请输入关键字" autocomplete="off" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="apiBookTypeList">搜索</el-button>
+        </el-form-item>
+      </el-form>
+      <MyTable border v-loading="bookLoading" :data="bookList" :columns="bookColumn">
+        <template #typePic="{row}">
+          <el-image :preview-src-list="[row.typePic]" :src="row.typePic || require('@/assets/images/img-no.jpg')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+            <div slot="error" class="flex-c-c img-err">
+              <i class="el-icon-picture-outline"></i>
+            </div>
+          </el-image>
+        </template>
+        <template #labelNames="{row}">
+          <div class="flex-c-c-c" v-if="row.labelNames">
+            <el-tag size="mini" v-for="name in row.labelNames.split(',')" :key="name" style="margin-bottom: 2px;">{{ name }}</el-tag>
+          </div>
+        </template>
+        <template #action="{row}">
+          <el-link :underline="false" type="danger" icon="el-icon-circle-close" @click="onBook(row)" v-if="novelForm.typeId == row.typeId">取消</el-link>
+          <el-link :underline="false" type="success" icon="el-icon-circle-check" @click="onBook(row,1)" v-else>选取</el-link>
+        </template>
+      </MyTable>
+      <Pagination :hidden="!bookTotal" :total="bookTotal" :page.sync="bookForm.pageNo" :limit.sync="bookForm.pageSize" style="text-align: right;" @pagination="onPagination($event,1)"></Pagination>
       <div slot="footer" class="dialog-footer">
         <el-button @click="onDialogCancle">取 消</el-button>
         <el-button type="primary" @click="onDialogSure">确 定</el-button>
@@ -100,7 +154,7 @@
 </template>
 <script>
 import ImageUpload from '@/components/Upload/ImageUpload.vue'
-import { bookFind, bookSave, bookDetail, bookUpdate } from '@/api/novel'
+import { bookFind, bookSave, bookDetail, bookUpdate, bookTypeList } from '@/api/novel'
 export default {
   components: { ImageUpload },
   data() {
@@ -141,6 +195,7 @@ export default {
       novelForm: {
         authorId: '',
         typeId: '',
+        typeName: '',
         bookTitle: '',
         bookPrice: '',
         sortNum: 0,
@@ -151,7 +206,23 @@ export default {
         isTop: 0,
         isShow: 0,
         bookCover: '',
-      }
+      },
+      // 二级分类数据
+      bookForm: {
+        keyword: '',
+        pageNo: 1,
+        pageSize: 10
+      },
+      bookColumn: [
+        {label: '二级分类标题', prop: 'typeTitle'},
+        {label: '阅读时长', prop: 'readCount'},
+        {slot: 'typePic', label: '分类图片', prop: 'typePic'},
+        {slot: 'labelNames', label: '活动标签', prop: 'labelNames'},
+        {slot: 'action', label: '操作', prop: 'action', fixed: 'right', width: '280'},
+      ],
+      bookLoading: false,
+      bookList: [],
+      bookTotal: 0
     }
   },
   created() {
@@ -167,7 +238,31 @@ export default {
         this.tableLoading = false
       }).finally(()=>this.tableLoading = false)
     },
-    onPagination({page, limit}){
+    // 二级分类列表接口
+    apiBookTypeList(){
+      if(this.bookLoading === false) this.bookLoading = true
+      bookTypeList(this.bookForm).then(res => {
+        this.bookList = res.list || []
+        this.bookTotal = Number(res.total) || 0
+      }).finally(()=>this.bookLoading = false)
+    },
+    // 选取小说 1选取
+    onBook({ typeId, typeTitle },type){
+      if(type === 1){
+        this.novelForm.typeId = typeId
+        this.novelForm.typeName = typeTitle
+        return
+      }
+      this.novelForm.typeId = ''
+      this.novelForm.typeName = ''
+    },
+    onPagination({page, limit},type){
+      if(type === 1){
+        this.bookForm.pageNo = page
+        this.bookForm.pageSize = limit
+        this.apiBookTypeList()
+        return
+      }
       this.searchForm.pageNo = page
       this.searchForm.pageSize = limit
       this.apiNovelList()
@@ -175,9 +270,13 @@ export default {
     // 新增
     onAdd(){
       this.title = '新增'
+      // 获取分类数据
+      this.apiBookTypeList()
       this.visible = true
       this.$nextTick(()=>{
         this.novelForm.authorId = ''
+        this.novelForm.typeId = ''
+        this.novelForm.typeName = ''
         this.novelForm.bookTitle = ''
         this.novelForm.bookPrice = ''
         this.novelForm.bookCover = ''
@@ -217,23 +316,27 @@ export default {
       })
     },
     // 详情数据接口
-    apiNovelDetail({ bookTitle, bookPrice, bookCover, bookDesc, sortNum, authorId, wordCount, bookState, chargeType, isTop, isShow}) {
+    apiNovelDetail({ bookId }) {
       this.title = '编辑'
-      this.novelForm.authorId = authorId
-      this.novelForm.bookTitle = bookTitle
-      this.novelForm.bookPrice = bookPrice
-      this.novelForm.bookCover = bookCover
-      this.novelForm.bookDesc = bookDesc
-      this.novelForm.sortNum = Number(sortNum || 0)
-      this.novelForm.wordCount = wordCount
-      this.novelForm.bookState = Number(bookState || 0)
-      this.novelForm.chargeType = Number(chargeType || 0)
-      this.novelForm.isTop = Number(isTop || 0)
-      this.novelForm.isShow = Number(isShow || 0)
-      this.visible = true
-      // userDetail({userId}).then(res => {
-      //   console.log(res)
-      // })
+      // 获取分类数据
+      this.apiBookTypeList()
+      bookDetail({ bookId }).then(res => {
+        const { bookId, bookTitle, bookPrice, bookCover, bookDesc, sortNum, authorId, wordCount, bookState, chargeType, isTop, isShow, typeId,
+         typeName } = res || {}
+        this.novelForm.authorId = authorId
+        this.novelForm.typeId = typeId
+        this.novelForm.typeName = typeName
+        this.novelForm.bookTitle = bookTitle
+        this.novelForm.bookPrice = Number(bookPrice || 0)
+        this.novelForm.bookCover = bookCover
+        this.novelForm.bookDesc = bookDesc
+        this.novelForm.sortNum = Number(sortNum || 0)
+        this.novelForm.wordCount = wordCount
+        this.novelForm.bookState = Number(bookState || 0)
+        this.novelForm.chargeType = Number(chargeType || 0)
+        this.novelForm.isTop = Number(isTop || 0)
+        this.novelForm.isShow = Number(isShow || 0)
+      }).finally(() => this.visible = true)
     },
     // 删除数据接口
     apiNovelDelete({ labelId: bookLabelId }) {

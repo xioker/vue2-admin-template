@@ -11,7 +11,7 @@
         <el-tag :type="row.isDel == 1 ? 'danger' : 'success'">{{ row.status == 1 ? '已停用' : '已启用' }}</el-tag>
       </template>
       <template #bannerUrl="{row}">
-        <el-image :preview-src-list="[row.bannerUrl]" :src="row.bannerUrl || require('@/assets/images/head-no.png')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
+        <el-image :preview-src-list="[row.bannerUrl]" :src="row.bannerUrl || require('@/assets/images/img-no.jpg')" fit="cover" style="width:50px;height:50px;border-radius: 50%;">
           <div slot="error" class="flex-c-c img-err">
             <i class="el-icon-picture-outline"></i>
           </div>
