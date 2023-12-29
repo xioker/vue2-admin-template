@@ -30,7 +30,7 @@
     </MyTable>
     <Pagination :hidden="!total" :total="total" :page.sync="searchForm.pageNo" :limit.sync="searchForm.pageSize" style="text-align: right;" @pagination="onPagination" />
     <!-- 修改新增弹框 -->
-    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="500px" :before-close="onDialogCancle">
+    <el-dialog append-to-body :title="title" :visible.sync="visible" :close-on-click-modal="false" :close-on-press-escape="false" width="600px" :before-close="onDialogCancle">
       <el-form ref="event" :model="eventForm" label-position="right" label-width="80px">
         <el-form-item label="活动名称" prop="eventName" :rules="[{trigger:'blur',message: '活动名称不能为空',required: true}]">
           <el-input type="text" v-model="eventForm.eventName" placeholder="请输入活动名称" autocomplete="off"></el-input>

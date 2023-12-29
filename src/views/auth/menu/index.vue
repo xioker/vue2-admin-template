@@ -2,8 +2,6 @@
   <div>
     <el-row style="margin-bottom: 10px;">
       <el-button type="primary" icon="el-icon-plus" @click="onAdd">新增</el-button>
-      <!-- <el-button @click="onExpand(1)">展开全部</el-button>
-      <el-button @click="onExpand(0)">折叠全部</el-button> -->
     </el-row>
     <!-- 表格数据 -->
     <el-table
@@ -12,6 +10,7 @@
       :data="tableList"
       row-key="menuId"
       :tree-props="{children: 'children'}"
+      default-expand-all
       height="calc(100vh - 150px)"
       max-height="calc(100vh - 150px)"
       style="overflow-y: auto;"
@@ -115,9 +114,6 @@ export default {
         status: 1,
         remark: ''
       },
-      // tree: [],
-      // expand: true,
-      // expandKeys: []
     }
   },
   created() {
@@ -132,15 +128,6 @@ export default {
         this.tableLoading = false
       }).catch(()=>this.tableLoading = false)
     },
-    // onExpand(type){
-    //   if(type === 1){
-    //     this.expand = true
-    //     this.expandKeys = this.tree.map(item=>item.menuId)
-    //   }else if(type === 0){
-    //     this.expand = false
-    //     this.expandKeys = []
-    //   }
-    // },
     // 新增
     onAdd(){
       this.title = '新增'
