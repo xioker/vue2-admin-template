@@ -17,3 +17,46 @@ export function verifyCode(params) {
     params
   })
 }
+
+
+// 首页相关接口
+// 火爆榜
+export function bookReadTimeReport(data) {
+  return request({
+    url: '/report/bookReadTimeReport',
+    method: 'post',
+    data
+  })
+}
+// 分类榜
+export function bookReadTypeTimeReport(data) {
+  return request({
+    url: '/report/bookReadTypeTimeReport',
+    method: 'post',
+    data
+  })
+}
+// 全国用户分布图数据
+export function custCityReport(data) {
+  return request({
+    url: '/report/custCityReport',
+    method: 'post',
+    data
+  })
+}
+// 用户报表数据
+export function customerReport(data) {
+  return request({
+    url: '/report/customerReport',
+    method: 'post',
+    data
+  })
+}
+// 每日各小时阅读人数
+export function todayReadCustReport(data) {
+  return request({
+    url: '/report/todayReadCustReport',
+    method: 'post',
+    data
+  })
+}
