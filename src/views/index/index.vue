@@ -16,19 +16,11 @@
         </el-col>
       </el-row>
     </Wapper>
-    <Wapper>
-      <template #title>待审核事件</template>
-      <el-row type="flex" justify="space-between" :gutter="20" style="margin:0 0 20px 0;padding: 20px 10px 0 10px;background-color: #fff;box-sizing: border-box;">
-        <el-col v-for="item in records2" :key="item.title" :span="6" >
-          <CardItem style="background-color:#fbfbfb" :datas="item"/>
-        </el-col>
-      </el-row>
-    </Wapper>
 
     <el-row :gutter="20">
       <el-col :span="12">
         <Wapper>
-          <template #title>订单趋势分析</template>
+          <template #title>全国用户分布数据</template>
           <div class="chart-wrapper">
             <line-chart :chart-data="lineChartData" />
           </div>
@@ -36,7 +28,7 @@
       </el-col>
       <el-col :span="12">
         <Wapper>
-          <template #title>会员趋势分析</template>
+          <template #title>每日各小时阅读人数</template>
           <div class="chart-wrapper">
             <line-chart :chart-data="lineChartData" />
           </div>
@@ -45,19 +37,14 @@
     </el-row>
 
     <el-row :gutter="20">
-      <el-col :span="8">
+      <el-col :span="12">
         <Wapper>
-          <template #title>佣金收入排行</template><box-card :columns="[{ prop: 'q', label: '头像' },{ prop: 'w', label: '昵称' },{ prop: 'e', label: '佣金收入' }]" />
+          <template #title>火爆榜</template><box-card :columns="[{ prop: 'q', label: '封面图' },{ prop: 'w', label: '标题' },{ prop: 'e', label: '阅读时长' }]" />
         </Wapper>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="12">
         <Wapper>
-          <template #title>爆更版</template><box-card />
-        </Wapper>
-      </el-col>
-      <el-col :span="8">
-        <Wapper>
-          <template #title>小说排行</template><box-card />
+          <template #title>分类榜</template><box-card />
         </Wapper>
       </el-col>
     </el-row>
@@ -72,6 +59,7 @@ import BarChart from './components/BarChart'
 import BoxCard from './components/BoxCard'
 import Wapper from './components/Wapper'
 import CardItem from './components/CardItem'
+import { bookReadTimeReport, bookReadTypeTimeReport, custCityReport, todayReadCustReport, customerReport } from '@/api/index'
 
 const lineChartData = {
   newVisitis: {
@@ -125,6 +113,23 @@ export default {
         { title: '评价', img: require('@/assets/images/card4.png'), desc: '' },
       ],
     }
+  },
+  created(){
+    customerReport().then((res)=>{
+      console.log(res)
+    })
+    bookReadTimeReport().then((res)=>{
+      console.log(res)
+    })
+    bookReadTypeTimeReport().then(res=>{
+      console.log(res)
+    })
+    custCityReport().then((res)=>{
+      console.log(res)
+    })
+    todayReadCustReport().then(res=>{
+      console.log(res)
+    })
   },
   methods: {
     handleSetLineChartData(type) {

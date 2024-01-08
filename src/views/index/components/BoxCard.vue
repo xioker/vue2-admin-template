@@ -34,7 +34,7 @@
         </div>
       </div>
     </div>
-    <MyTable :data="[]" :columns="columns"></MyTable>
+    <MyTable :data="[]" :columns="columns" style="max-height:auto !important;height:auto !important"></MyTable>
   </el-card>
 </template>
 
